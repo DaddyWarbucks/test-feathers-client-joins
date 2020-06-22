@@ -58,12 +58,12 @@ await Promise.all([
 ```js
 // This is how `withResultsGroupLoader` works
 
-// Two **concurrent** HTTP reqs
+// One HTTP req
 await Promise.all([
     app.service('api/batch').create([ category/batch instructions ])
 ]);
 
-// Then later, two more **concurrent** HTTP reqs
+// Then later, one more HTTP req
 await Promise.all([
     app.service('api/batch').find([ tag/bio instructions ])
 ]);
