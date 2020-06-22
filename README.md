@@ -4,7 +4,7 @@
 
 ## About
 
-This project is a basic setup to test joining/populating records from the client and its performance compared to the equivelant server side implementation. It consists of a database with 5,000 `posts` where each post joins a `category` and `user`. Each category then joins a `tag` and each user then joins a `bio`. The purpose of this thought experiment is to test if it is feasible to do multi-level joins from the client, allowing the client to request what it wants, when it wants it and also keeping the server thin and dumb.
+This project is a basic setup to test joining/populating records from the client and its performance compared to the equivalent server side implementation. It consists of a database with 5,000 `posts` where each post joins a `category` and `user`. Each category then joins a `tag` and each user then joins a `bio`. The purpose of this thought experiment is to test if it is feasible to do multi-level joins from the client, allowing the client to request what it wants, when it wants it and also keeping the server thin and dumb.
 
 The project uses `withResults` from `feathers-fletching` to accomplish the joins on both server and client. It also uses `feathers-batchloader` on both.
 The combo of `withResults` and the `loaderFactory()` (a mixin for creating batchLoaders) is really solid and what most of my apps currently use on the server side. I wanted to see if I could move that all to client side, which was the genesis of this project. There is also a third hook called `withResultsGroupLoader` which combines batchLoaders and the concept of [feathers-batch](https://github.com/feathersjs-ecosystem/feathers-batch) which allows the client to run some code on the server.
