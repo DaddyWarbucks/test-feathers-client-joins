@@ -65,7 +65,7 @@ await Promise.all([
 
 // Then later, one more HTTP req
 await Promise.all([
-    app.service('api/batch').find([ tag/bio instructions ])
+    app.service('api/batch').create([ tag/bio instructions ])
 ]);
 ```
 
