@@ -50,7 +50,7 @@ await Promise.all([
 
 // Then later, two more **concurrent** HTTP reqs
 await Promise.all([
-    app.service('api/users').find({ query: { _id: { $in: [100 ids] } } })
+    app.service('api/bios').find({ query: { _id: { $in: [100 ids] } } })
     app.service('api/tags').find({ query: { _id: { $in: [100 ids] } } })
 ]);
 ```
