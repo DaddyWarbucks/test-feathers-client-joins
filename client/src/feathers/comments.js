@@ -1,12 +1,12 @@
 import { switchHook } from 'shared';
 
 export default (app) => {
-  app.service('api/categories').hooks({
+  app.service('api/comments').hooks({
     before: {
       all: []
     },
     after: {
-      all: [switchHook('categories', 'client')]
+      all: [switchHook('comments', 'client')]
     }
   });
 };

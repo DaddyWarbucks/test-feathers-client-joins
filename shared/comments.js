@@ -2,25 +2,25 @@ const { withResult } = require('feathers-fletching');
 const { makeParams } = require('./index');
 
 module.exports.withResultsPrimary = withResult({
-  bio: (user, context) => {
+  user: (comment, context) => {
     return context.app
-      .service('api/bios')
-      .get(user.bio_id, makeParams(context));
+      .service('api/users')
+      .get(comment.user_id, makeParams(context));
   }
 });
 
 module.exports.withResultsLoad = withResult({
-  bio: (user, context) => {
+  user: (comment, context) => {
     return context.params
-      .loader('api/bios')
-      .load({ _id: user.bio_id }, makeParams(context));
+      .loader('api/users')
+      .load({ _id: comment.user_id }, makeParams(context));
   }
 });
 
 module.exports.withResultsCached = withResult({
-  bio: (user, context) => {
+  user: (comment, context) => {
     return context.params
-      .loader('api/bios')
-      .get(user.bio_id, makeParams(context));
+      .loader('api/users')
+      .get(comment.user_id, makeParams(context));
   }
 });

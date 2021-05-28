@@ -1,5 +1,13 @@
 const { ContextLoader } = require('@feathers-plus/batch-loader');
 
+module.exports.makeParams = (context) => {
+  return {
+    paginate: false,
+    method: context.params.method,
+    joinLocation: context.params.joinLocation
+  };
+};
+
 module.exports.paramsFromClient = (context) => {
   if (context.params.provider) {
     const { method, joinLocation, ...rest } = context.params.query || {};

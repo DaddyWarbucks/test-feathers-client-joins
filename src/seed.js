@@ -4,28 +4,31 @@ const app = require('./app');
 const randomIndex = (min, max) =>
   Math.floor(Math.random() * (max - min + 1) + min);
 
-const bios = new Array(1000).fill(null).map(() => {
+const bios = new Array(99).fill(null).map(() => {
   return {
     _id: faker.random.uuid(),
-    name: faker.lorem.word()
+    content: faker.lorem.words()
   };
 });
 
-const users = new Array(999).fill(null).map(() => {
-  const bioIndex = randomIndex(0, 998);
-  const bio = bios[bioIndex];
+const users = new Array(99).fill(null).map((_, index) => {
   return {
     _id: faker.random.uuid(),
     name: faker.name.findName(),
     // email: faker.internet.email(),
     email: faker.random.uuid(), // emails must be unique
     password: 'password',
-    bio_id: bio._id
+    bio_id: bios[index]._id
   };
 });
 
-const bioIndex = randomIndex(0, 998);
-const bio = bios[bioIndex];
+const bio = {
+  _id: faker.random.uuid(),
+  content: faker.lorem.words()
+};
+
+bios.push(bio);
+
 users.push({
   _id: faker.random.uuid(),
   name: 'Main User',
@@ -34,44 +37,28 @@ users.push({
   bio_id: bio._id
 });
 
-const tags = new Array(1000).fill(null).map(() => {
-  return {
-    _id: faker.random.uuid(),
-    name: faker.lorem.word()
-  };
-});
-
-const categories = new Array(1000).fill(null).map(() => {
-  const tagIndex = randomIndex(0, 999);
-  const tag = tags[tagIndex];
-  return {
-    _id: faker.random.uuid(),
-    name: faker.lorem.word(),
-    tag_id: tag._id
-  };
-});
-
 const posts = new Array(5000).fill(null).map(() => {
-  const userIndex = randomIndex(0, 999);
-  const user = users[userIndex];
-
-  const categoryIndex = randomIndex(0, 999);
-  const category = categories[categoryIndex];
-
   return {
     _id: faker.random.uuid(),
     title: faker.lorem.words(),
-    user_id: user._id,
-    category_id: category._id
+    user_id: users[randomIndex(0, 99)]._id
+  };
+});
+
+const comments = new Array(1000).fill(null).map(() => {
+  return {
+    _id: faker.random.uuid(),
+    comment: faker.lorem.words(),
+    user_id: users[randomIndex(0, 99)]._id,
+    post_id: posts[randomIndex(0, 4999)]._id
   };
 });
 
 const seed = async () => {
-  console.log('Seeding. This may take about a minute');
+  console.log('Seeding...');
   await Promise.all([
     app.service('api/users').create(users),
-    app.service('api/categories').create(categories),
-    app.service('api/tags').create(tags),
+    app.service('api/comments').create(comments),
     app.service('api/bios').create(bios),
     app.service('api/posts').create(posts)
   ]).catch(console.error);

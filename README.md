@@ -37,14 +37,14 @@ yarn start
 
 - When using REST, things are still pretty fast...I was impressed. It was faster than I expected. But the difference between it and the server implementation is substantial.
 
-feathers-batch idea has some legs. Not so much on a Socket implementation but certainly on REST. But, in order for it to be more performant, there has to be 6 or more of **concurrent** HTTP requests going on. With the default setup of joins in this example, its actually not any faster...because how `batchLoader` and `withResults` work the promises/http reqs are already optimized. Chrome generally allows up to 6 concurrent HTTP connections (See [Max Browser HTTP Connections](https://docs.pushtechnology.com/cloud/latest/manual/html/designguide/solution/support/connection_limitations.html)) and that means the current setup for the client `withResultsBatchLoader` only has two *concurrent* connections at any time.
+feathers-batch idea has some legs. Not so much on a Socket implementation but certainly on REST. But, in order for it to be more performant, there has to be 6 or more of **concurrent** HTTP requests going on. With the default setup of joins in this example, its actually not any faster...because how `batchLoader` and `withResults` work the promises/http reqs are already optimized. Chrome generally allows up to 6 concurrent HTTP connections (See [Max Browser HTTP Connections](https://docs.pushtechnology.com/cloud/latest/manual/html/designguide/solution/support/connection_limitations.html)) and that means the current setup for the client `withResultsBatchLoader` only has two _concurrent_ connections at any time.
 
 ```js
 // This is how `withResultsBatchLoader` works
 
 // Two **concurrent** HTTP reqs
 await Promise.all([
-    app.service('api/categories').find({ query: { _id: { $in: [100 ids] } } })
+    app.service('api/comments').find({ query: { _id: { $in: [100 ids] } } })
     app.service('api/users').find({ query: { _id: { $in: [100 ids] } } })
 ]);
 
@@ -72,4 +72,3 @@ await Promise.all([
 So there is only two going on at anytime with `withResultsBatchLoader`...and Chrome (and most other browsers) allow up to 6. So the `feathers-batch` is not any faster because we aren't maxing out the concurrent requests.
 
 Checkout `client/src/feathers/posts` and you will notice that there are more joins commented out. Start uncommenting those and you will see that `feathers-batch` becomes more performant than `withResultsBatchLoader`
-

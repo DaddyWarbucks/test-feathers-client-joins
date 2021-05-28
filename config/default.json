@@ -9,8 +9,8 @@
   "nedb": "../data",
   "authentication": {
     "entity": "user",
-    "service": "api/users",
-    "secret": "iEnUj2mU4DtTOCYpYUcDV3fRYyc=",
+    "service": "users",
+    "secret": "rwWj1ZsOJ450uQjyBDgsVSVFjjE=",
     "authStrategies": [
       "jwt",
       "local"

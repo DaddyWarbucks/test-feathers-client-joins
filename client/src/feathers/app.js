@@ -7,7 +7,7 @@ import { batchClient } from './batchClient';
 
 import posts from './posts';
 import profile from './profile';
-import categories from './categories';
+import comments from './comments';
 import users from './users';
 
 process.hrtime = require('browser-process-hrtime');
@@ -65,7 +65,7 @@ app.mixins.push(function (service) {
 
 app.configure(posts);
 app.configure(profile);
-app.configure(categories);
+app.configure(comments);
 app.configure(users);
 
 // Setup profiler
