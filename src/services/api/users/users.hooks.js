@@ -1,58 +1,19 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
-const { withResult } = require('feathers-fletching');
-
-const {
-  hashPassword, protect
-} = require('@feathersjs/authentication-local').hooks;
-
-const withResults = withResult({
-  bio: async (user, context) => {
-    return context.app.service('api/bios')
-      .get(user.bio_id);
-  }
-});
-
-const withResultsBatchLoader = withResult({
-  bio: async (user, context, { bios }) => {
-    return bios.load(user.bio_id);
-  }
-}, context => {
-  return {
-    bios: context.app.service('api/bios')
-      .loaderFactory()
-  };
-});
-
-const switchHook = context => {
-  switch (context.params.hookName) {
-    case 'withResultsServer':
-      return withResults(context);
-    case 'withResultsBatchLoaderServer':
-      return withResultsBatchLoader(context);
-
-    default:
-      return context;
-  }
-};
+const { switchHook } = require('../../../../client/src/feathers/hooks');
 
 module.exports = {
   before: {
-    all: [],
-    find: [authenticate('jwt')],
-    get: [authenticate('jwt')],
-    create: [hashPassword('password')],
-    update: [hashPassword('password'), authenticate('jwt')],
-    patch: [hashPassword('password'), authenticate('jwt')],
-    remove: [authenticate('jwt')]
+    all: [authenticate('jwt')],
+    find: [],
+    get: [],
+    create: [],
+    update: [],
+    patch: [],
+    remove: []
   },
 
   after: {
-    all: [
-      switchHook,
-      // Make sure the password field is never sent to the client
-      // Always must be the last hook
-      protect('password')
-    ],
+    all: [switchHook('users', 'server')],
     find: [],
     get: [],
     create: [],

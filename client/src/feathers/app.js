@@ -1,7 +1,9 @@
 import io from 'socket.io-client';
 import feathers from '@feathersjs/client';
 import BatchLoader from '@feathers-plus/batch-loader';
-import { batchClient } from 'feathers-batch/client';
+import appHooks from './app.hooks';
+// import { batchClient } from 'feathers-batch/client';
+import { batchClient } from './batchClient';
 
 
 import posts from './posts';
@@ -85,10 +87,13 @@ app.set('profiler', {
   clearProfile
 });
 
+app.hooks(appHooks);
+
 // Setup feathers-batch
-// app.configure(batchClient({
-//   batchService: 'api/batch'
-// }));
+app.configure(batchClient({
+  batchService: 'api/batch',
+  exclude: ['server/profile', 'client/profile', 'authentication']
+}));
 
 app.setup(app);
 

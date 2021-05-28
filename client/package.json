@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@feathers-plus/batch-loader": "https://github.com/feathersjs-ecosystem/batch-loader.git#v2",
     "@feathersjs/client": "^4.5.4",
     "@feathersjs/commons": "^4.5.3",
     "@testing-library/jest-dom": "^4.2.4",

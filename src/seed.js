@@ -73,7 +73,7 @@ const seed = async () => {
     app.service('api/tags').create(tags),
     app.service('api/bios').create(bios),
     app.service('api/posts').create(posts)
-  ]).catch(console.log);
+  ]).catch(console.error);
   console.log('Done seeding');
 };
 

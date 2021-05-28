@@ -41,10 +41,10 @@ class App extends React.Component {
       const start = new Date().getTime();
       const posts = await app.service('api/posts').find({
         query: {
-          $sort: { _id: 1 }, $limit: 100,
-          method: this.state.method,
-          joinLocation: this.state.joinLocation
+          $sort: { _id: 1 }, $limit: 100
         },
+        method: this.state.method,
+        joinLocation: this.state.joinLocation
       });
       const end = new Date().getTime();
 
@@ -69,12 +69,6 @@ class App extends React.Component {
 
 
   }
-
-  // toggleRepeatAuth = repeatAuth => {
-  //   this.setState({ repeatAuth }, () => {
-  //     this.loadPosts(this.state.hookName);
-  //   });
-  // }
 
   render() {
     const {
@@ -117,11 +111,14 @@ class App extends React.Component {
           <div className="btn-group mb-2">
             <button
               disabled={loading}
-              className={`btn btn-primary ${joinLocation === 'client' ? 'active' : ''}`}
+              className={`btn btn-primary ${joinLocation === 'client' && !useBatch ? 'active' : ''}`}
               onClick={() => {
                 this.setState(
-                  { joinLocation: 'client' },
-                  this.loadPosts
+                  { joinLocation: 'client', useBatch: false  },
+                  () => {
+                    this.loadPosts();
+                    app.set('useBatch', false);
+                  }
                 );
               }}
             >
@@ -132,8 +129,11 @@ class App extends React.Component {
               className={`btn btn-primary ${joinLocation === 'server' ? 'active' : ''}`}
               onClick={() => {
                 this.setState(
-                  { joinLocation: 'server' },
-                  this.loadPosts
+                  { joinLocation: 'server', useBatch: false },
+                  () => {
+                    this.loadPosts();
+                    app.set('useBatch', false);
+                  }
                 );
               }}
             >
@@ -141,15 +141,18 @@ class App extends React.Component {
             </button>
             <button
               disabled={loading}
-              className={`btn btn-primary ${joinLocation === 'batch' ? 'active' : ''}`}
+              className={`btn btn-primary ${useBatch ? 'active' : ''}`}
               onClick={() => {
                 this.setState(
-                  { joinLocation: 'batch' },
-                  this.loadPosts
+                  { joinLocation: 'client', useBatch: true },
+                  () => {
+                    this.loadPosts();
+                    app.set('useBatch', true);
+                  }
                 );
               }}
             >
-              Server via feathers-batch
+              feathers-batch
             </button>
           </div>
           <p className="lead">Choose between doing the joins on the client or the server. See also <a href="https://github.com/feathersjs-ecosystem/feathers-batch" target="_blank" rel="noopener noreferrer">feathers-batch</a></p>

@@ -1,9 +1,8 @@
-const { authenticate } = require('@feathersjs/authentication').hooks;
+import { setupLoader, paramsForServer } from './hooks';
 
-
-module.exports = {
+export default {
   before: {
-    all: [authenticate('jwt')],
+    all: [setupLoader, paramsForServer],
     find: [],
     get: [],
     create: [],
@@ -23,7 +22,7 @@ module.exports = {
   },
 
   error: {
-    all: [],
+    all: [context => { console.error(context.error); }],
     find: [],
     get: [],
     create: [],

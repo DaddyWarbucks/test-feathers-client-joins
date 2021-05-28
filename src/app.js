@@ -13,7 +13,6 @@ const {
   getProfile,
   clearProfile
 } = require('feathers-profiler');
-const BatchLoader = require('@feathers-plus/batch-loader');
 
 const middleware = require('./middleware');
 const services = require('./services');
@@ -44,43 +43,6 @@ app.use('/', express.static(app.get('public')));
 // Set up Plugins and providers
 app.configure(express.rest());
 app.configure(socketio());
-
-// Add a nice mixin to services that allow you to easily
-// create batchLoaders w/o all the config
-app.mixins.push(function (service) {
-  service.loaderFactory = function (opts = {}) {
-    if (!service.find) {
-      throw new Error(
-        'Cannot call the loaderFactory() method on this service because it does not have a find() method.'
-      );
-    }
-    const { params = {}, ...rest } = opts;
-    const options = {
-      id: '_id',
-      multi: false,
-      ...rest
-    };
-    const serviceParams = {
-      paginate: false,
-      ...params
-    };
-    return new BatchLoader(async keys => {
-      const result = await service.find({
-        ...serviceParams,
-        query: {
-          [options.id]: { $in: BatchLoader.getUniqueKeys(keys) },
-          ...serviceParams.query
-        }
-      });
-      return BatchLoader.getResultsByKey(
-        keys,
-        result.data ? result.data : result,
-        rec => rec[options.id],
-        options.multi ? '[!]' : '!'
-      );
-    });
-  };
-});
 
 // Configure other middleware (see `middleware/index.js`)
 app.configure(middleware);

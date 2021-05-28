@@ -1,48 +1,5 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
-const { withResult } = require('feathers-fletching');
-
-const withResults = withResult({
-  user: async (post, context) => {
-    const user = await context.app.service('api/users')
-      .get(post.user_id);
-    delete user.password;
-    return user;
-  },
-  category: (post, context) => {
-    return context.app.service('api/categories')
-      .get(post.category_id);
-  }
-});
-
-const withResultsBatchLoader = withResult({
-  user: async (post, context, { users }) => {
-    const user = await users.load(post.user_id);
-    delete user.password;
-    return user;
-  },
-  category: (post, context, { categories }) => {
-    return categories.load(post.category_id);
-  }
-}, context => {
-  return {
-    users: context.app.service('api/users')
-      .loaderFactory(),
-    categories: context.app.service('api/categories')
-      .loaderFactory()
-  };
-});
-
-const switchHook = context => {
-  switch (context.params.hookName) {
-    case 'withResultsServer':
-      return withResults(context);
-    case 'withResultsBatchLoaderServer':
-      return withResultsBatchLoader(context);
-
-    default:
-      return context;
-  }
-};
+const { switchHook } = require('../../../../client/src/feathers/hooks');
 
 module.exports = {
   before: {
@@ -56,7 +13,7 @@ module.exports = {
   },
 
   after: {
-    all: [switchHook],
+    all: [switchHook('posts', 'server')],
     find: [],
     get: [],
     create: [],

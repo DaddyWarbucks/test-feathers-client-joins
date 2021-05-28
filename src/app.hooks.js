@@ -1,25 +1,8 @@
-// Application hooks that run for every service
-
-const pluckParams = context => {
-  const {
-    method,
-    joinLocation,
-    ...rest
-  } = context.params.query || {};
-
-  context.params = {
-    ...context.params,
-    query: rest,
-    joinLocation,
-    method
-  };
-
-  return context;
-};
+const { paramsFromClient, setupLoader } = require('../client/src/feathers/hooks');
 
 module.exports = {
   before: {
-    all: [pluckParams],
+    all: [paramsFromClient, setupLoader],
     find: [],
     get: [],
     create: [],
