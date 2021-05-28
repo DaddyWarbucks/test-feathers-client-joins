@@ -229,11 +229,17 @@ class App extends React.Component {
           <div className="col col-sm-6">
             <div className="bg-light rounded p-3">
               <p>
-                This is a basic example app that compares doing joins/population on the client vs on the server. It is also a test bed and exmaple of a new v2 for <a href="https://github.com/feathersjs-ecosystem/batch-loader/tree/v2" target="_blank" rel="noopener noreferrer">feathers-dataloader</a>. See also the <a href="https://github.com/feathersjs-ecosystem/batch-loader/issues/18" target="_blank" rel="noopener noreferrer">v2 RFC</a> and leave some feedback!
+                This is a basic example app that compares doing joins/population on the client vs on the server. It is also a test bed and exmaple of a new v2 for <a href="https://github.com/feathersjs-ecosystem/batch-loader/tree/v2" target="_blank" rel="noopener noreferrer">feathers-dataloader</a>. See also the <a href="https://github.com/feathersjs-ecosystem/batch-loader/issues/18" target="_blank" rel="noopener noreferrer">v2 RFC</a> and leave some feedback! You can also checkout the <a href="https://github.com/DaddyWarbucks/test-feathers-client-joins" target="_blank" rel="noopener noreferrer">source code</a> for this project. Specifically, see the <code>shared</code> direcotry.
               </p>
               <p>
-                The app consists of 5,000 <code>posts</code>. The posts then join an <code>author</code> and <code>comments</code>. Each author then joins on a <code>bio</code>, and each comment subsequently joins on its <code>user</code>.
+                The app consists of 5,000 <code>posts</code>. The posts then join a <code>user</code> and <code>comments</code>. Each user then joins on a <code>bio</code>, and each comment subsequently joins on its <code>user</code> (and subsequently its bio).
               </p>
+              <ul>
+                <li className="mb-2">5,000 posts, each with random <code>user_id</code></li>
+                <li className="mb-2">1,000 comments, each with random <code>user_id</code> and <code>post_id</code></li>
+                <li className="mb-2">100 users, each with corresponding <code>bio_id</code></li>
+                <li className="mb-2">100 bios</li>
+              </ul>
               <p>
                 These relationships represent a good example of nested joins where some of those joins are "repeating" resources, such as the post joining its author and comments joinging their user. This is an excellent usecase for <code>feathers-datalader</code>.
               </p>
