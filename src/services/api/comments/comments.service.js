@@ -6,7 +6,7 @@ const hooks = require('./comments.hooks');
 module.exports = function (app) {
   const options = {
     Model: createModel(app),
-    paginate: app.get('paginate'),
+    paginate: false,
     multi: true
   };
 

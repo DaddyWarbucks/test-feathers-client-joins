@@ -45,7 +45,7 @@ const posts = new Array(5000).fill(null).map(() => {
   };
 });
 
-const comments = new Array(1000).fill(null).map(() => {
+const comments = new Array(10000).fill(null).map(() => {
   return {
     _id: faker.random.uuid(),
     comment: faker.lorem.words(),

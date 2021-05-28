@@ -236,7 +236,7 @@ class App extends React.Component {
               </p>
               <ul>
                 <li className="mb-2">5,000 posts, each with random <code>user_id</code></li>
-                <li className="mb-2">1,000 comments, each with random <code>user_id</code> and <code>post_id</code></li>
+                <li className="mb-2">10,000 comments, each with random <code>user_id</code> and <code>post_id</code></li>
                 <li className="mb-2">100 users, each with corresponding <code>bio_id</code></li>
                 <li className="mb-2">100 bios</li>
               </ul>
