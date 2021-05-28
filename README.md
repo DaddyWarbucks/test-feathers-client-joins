@@ -4,17 +4,20 @@
 
 ## About
 
-This project is a basic setup to test joining/populating records from the client and its performance compared to the equivalent server side implementation. It consists of a database with 5,000 `posts` where each post joins a `category` and `user`. Each category then joins a `tag` and each user then joins a `bio`. The purpose of this thought experiment is to test if it is feasible to do multi-level joins from the client, allowing the client to request what it wants, when it wants it and also keeping the server thin and dumb.
+This is a basic example app that compares doing joins/population on the client vs on the server. It is also a test bed and exmaple of a new v2 for [feathers-dataloader](https://github.com/feathersjs-ecosystem/batch-loader/tree/v2) . See also the [v2 RFC](https://github.com/feathersjs-ecosystem/batch-loader/issues/18) and leave some feedback! You can also checkout the [source code](https://github.com/DaddyWarbucks/test-feathers-client-joins) for this project. Specifically, see the `shared` direcotry.
 
-The project uses `withResults` from `feathers-fletching` to accomplish the joins on both server and client. It also uses `feathers-dataloader` on both.
-The combo of `withResults` and the `feathers-dataloader` is really solid and what most of my apps currently use on the server side. I wanted to see if I could move that all to client side, which was the genesis of this project.
+The app consists of 5,000 `posts`. The posts then join a `user` and `comments`. Each user then joins on a `bio`, and each comment subsequently joins on its `user` (and subsequently its bio).
 
-Both the server and client also implement `feathers-profiler` to display the services called, their duration, etc.
+- 5,000 posts, each with random `user_id`
+- 10,000 comments, each with random `user_id` and `post_id`
+- 100 users, each with corresponding `bio_id`
+- 100 bios
 
-I also made a video rambling through this thing and some of my thoughts
-[Video](https://www.loom.com/share/ae6ed46cf0ea44ceb33b34c99b6cdbc5)
+These relationships represent a good example of nested joins where some of those joins are "repeating" resources, such as the post joining its author and comments joinging their user. This is an excellent usecase for `feathers-datalader`.
 
-## Setup
+The app also uses [feathers-batch](https://github.com/feathersjs-ecosystem/feathers-batch) , which is a clever way of allowing the client to specify which joins to do, but actually executes that code on the server.
+
+## Development
 
 The client side uses create-react-app. Note this is not a React specific implementaion or idea. I simply used React and Bootstrap because I know them well and this was just a quick weekend project. There is not a unified start/dev/build script. You will need to open two terminals and run the server in one terminal and run CRA in another terminal.
 
@@ -29,46 +32,11 @@ yarn install
 yarn start
 ```
 
-## Takeaways
+## Deployment
 
-- When using sockets, joing from the client is very fast and the benefits it adds outweigh the very slight performance hit compared to doing it on the server, IMO.
-
-- When using sockets, network connection is less of a factor. Even on "Slow 3G" network throttling, the joins are very fast. Its seems that network connection speed has no effect (once the socket is connected)
-
-- When using REST, things are still pretty fast...I was impressed. It was faster than I expected. But the difference between it and the server implementation is substantial.
-
-feathers-batch idea has some legs. Not so much on a Socket implementation but certainly on REST. But, in order for it to be more performant, there has to be 6 or more of **concurrent** HTTP requests going on. With the default setup of joins in this example, its actually not any faster...because how `batchLoader` and `withResults` work the promises/http reqs are already optimized. Chrome generally allows up to 6 concurrent HTTP connections (See [Max Browser HTTP Connections](https://docs.pushtechnology.com/cloud/latest/manual/html/designguide/solution/support/connection_limitations.html)) and that means the current setup for the client `withResultsBatchLoader` only has two _concurrent_ connections at any time.
+The app is currently using a very poor-man's deployment solution. Run the create-react-app build command and then those assets are served from the server.
 
 ```js
-// This is how `withResultsBatchLoader` works
-
-// Two **concurrent** HTTP reqs
-await Promise.all([
-    app.service('api/comments').find({ query: { _id: { $in: [100 ids] } } })
-    app.service('api/users').find({ query: { _id: { $in: [100 ids] } } })
-]);
-
-// Then later, two more **concurrent** HTTP reqs
-await Promise.all([
-    app.service('api/bios').find({ query: { _id: { $in: [100 ids] } } })
-    app.service('api/tags').find({ query: { _id: { $in: [100 ids] } } })
-]);
+cd client
+yarn build
 ```
-
-```js
-// This is how `feathers-batch` works
-
-// One HTTP req
-await Promise.all([
-    app.service('api/batch').create([ category/batch instructions ])
-]);
-
-// Then later, one more HTTP req
-await Promise.all([
-    app.service('api/batch').create([ tag/bio instructions ])
-]);
-```
-
-So there is only two going on at anytime with `withResultsBatchLoader`...and Chrome (and most other browsers) allow up to 6. So the `feathers-batch` is not any faster because we aren't maxing out the concurrent requests.
-
-Checkout `client/src/feathers/posts` and you will notice that there are more joins commented out. Start uncommenting those and you will see that `feathers-batch` becomes more performant than `withResultsBatchLoader`
