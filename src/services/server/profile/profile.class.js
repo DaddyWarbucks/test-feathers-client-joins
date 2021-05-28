@@ -19,5 +19,4 @@ exports.Profile = class Profile {
     }
     return {};
   }
-
 };

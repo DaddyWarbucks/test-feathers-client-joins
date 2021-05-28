@@ -1,4 +1,7 @@
-const { paramsFromClient, setupLoader } = require('../client/src/feathers/hooks');
+const {
+  paramsFromClient,
+  setupLoader
+} = require('../client/src/feathers/hooks');
 
 module.exports = {
   before: {
@@ -22,7 +25,11 @@ module.exports = {
   },
 
   error: {
-    all: [context => { console.error(context.error); }],
+    all: [
+      (context) => {
+        console.error(context.error);
+      }
+    ],
     find: [],
     get: [],
     create: [],

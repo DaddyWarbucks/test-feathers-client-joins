@@ -1,5 +1,3 @@
 const { Service } = require('feathers-nedb');
 
-exports.Categories = class Categories extends Service {
-  
-};
+exports.Categories = class Categories extends Service {};

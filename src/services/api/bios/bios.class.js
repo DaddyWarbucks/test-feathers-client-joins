@@ -1,5 +1,3 @@
 const { Service } = require('feathers-nedb');
 
-exports.Bios = class Bios extends Service {
-  
-};
+exports.Bios = class Bios extends Service {};

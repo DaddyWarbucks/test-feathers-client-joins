@@ -7,23 +7,26 @@
   "parserOptions": {
     "ecmaVersion": 2018
   },
-  "extends": "eslint:recommended",
+  "extends": [
+    "eslint:recommended",
+    "plugin:prettier/recommended"
+  ],
   "rules": {
-    "indent": [
+    "prettier/prettier": [
       "error",
-      2
+      {
+        "trailingComma": "none",
+        "singleQuote": true
+      }
     ],
-    "linebreak-style": [
-      "error",
-      "unix"
+    "no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "app|data|params|reject"
+      }
     ],
-    "quotes": [
-      "error",
-      "single"
-    ],
-    "semi": [
-      "error",
-      "always"
+    "no-console": [
+      "warn"
     ]
   }
 }

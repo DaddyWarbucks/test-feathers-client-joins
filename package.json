@@ -25,11 +25,12 @@
   },
   "scripts": {
     "test": "yarn run lint && yarn run mocha",
-    "lint": "eslint src/. test/. --config .eslintrc.json",
     "dev": "nodemon src/",
     "seed": "rm -rf data && node src/seed.js",
     "start": "node src/",
-    "mocha": "mocha test/ --recursive --exit"
+    "mocha": "mocha test/ --recursive --exit",
+    "lint": "eslint src/. test/. --config .eslintrc.json",
+    "fixcode": "eslint src/. test/. --config .eslintrc.json --fix"
   },
   "standard": {
     "env": [
@@ -62,8 +63,11 @@
   },
   "devDependencies": {
     "axios": "^0.19.2",
-    "eslint": "^6.8.0",
+    "eslint": "^7.27.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
     "mocha": "^7.0.1",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "prettier": "^2.3.0"
   }
 }

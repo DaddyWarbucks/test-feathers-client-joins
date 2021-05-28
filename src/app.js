@@ -8,11 +8,7 @@ const configuration = require('@feathersjs/configuration');
 const express = require('@feathersjs/express');
 const socketio = require('@feathersjs/socketio');
 const { strictRestQuery } = require('feathers-fletching');
-const {
-  profiler,
-  getProfile,
-  clearProfile
-} = require('feathers-profiler');
+const { profiler, getProfile, clearProfile } = require('feathers-profiler');
 
 const middleware = require('./middleware');
 const services = require('./services');
@@ -23,11 +19,13 @@ const authentication = require('./authentication');
 
 const app = express(feathers());
 
-app.configure(strictRestQuery({
-  arrayLimit: 5000,
-  depth: 5000,
-  parameterLimit: 5000
-}));
+app.configure(
+  strictRestQuery({
+    arrayLimit: 5000,
+    depth: 5000,
+    parameterLimit: 5000
+  })
+);
 
 // Load app configuration
 app.configure(configuration());

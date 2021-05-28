@@ -1,7 +1,8 @@
 const faker = require('faker');
 const app = require('./app');
 
-const randomIndex = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+const randomIndex = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1) + min);
 
 const bios = new Array(1000).fill(null).map(() => {
   return {
@@ -36,7 +37,7 @@ users.push({
 const tags = new Array(1000).fill(null).map(() => {
   return {
     _id: faker.random.uuid(),
-    name: faker.lorem.word(),
+    name: faker.lorem.word()
   };
 });
 
@@ -61,7 +62,7 @@ const posts = new Array(5000).fill(null).map(() => {
     _id: faker.random.uuid(),
     title: faker.lorem.words(),
     user_id: user._id,
-    category_id: category._id,
+    category_id: category._id
   };
 });
 

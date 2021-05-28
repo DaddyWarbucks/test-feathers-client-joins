@@ -1,4 +1,4 @@
-const handleProfile = context => {
+const handleProfile = (context) => {
   delete context._log;
   delete context.result['server/profile'];
   return context;
