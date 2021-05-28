@@ -21,7 +21,7 @@ const provider = urlParams.get('provider') || 'socket';
 if (provider === 'rest') {
   app.configure(feathers.rest('http://localhost:3030').fetch(fetch));
 } else {
-  app.configure(feathers.socketio(io('http://localhost:3030')));
+  app.configure(feathers.socketio(io('http://localhost:3030'), { timeout: 100000 }));
 }
 
 app.configure(feathers.authentication());

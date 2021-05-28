@@ -15,6 +15,7 @@ class App extends React.Component {
       posts: null,
       duration: null,
       useBatch: false,
+      limit: 100,
       method: 'primary',
       joinLocation: 'client',
       provider
@@ -41,7 +42,7 @@ class App extends React.Component {
       const posts = await app.service('api/posts').find({
         query: {
           $sort: { _id: 1 },
-          $limit: 100
+          $limit: this.state.limit
         },
         method: this.state.method,
         joinLocation: this.state.joinLocation
@@ -76,6 +77,7 @@ class App extends React.Component {
       posts,
       duration,
       useBatch,
+      limit,
       method,
       joinLocation,
       provider
@@ -224,6 +226,20 @@ class App extends React.Component {
                   methods
                 </li>
               </ul>
+            </div>
+
+            <div className="mb-4">
+              <h4>Limit</h4>
+              <input type="text" className="form-control" value={limit} onChange={event => {
+                const limit = event.target.value;
+                this.setState({
+                  limit
+                }, () => {
+                  if (limit) {
+                    this.loadPosts()
+                  }
+                })
+              }}/>
             </div>
           </div>
           <div className="col col-sm-6">
