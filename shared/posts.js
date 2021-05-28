@@ -2,10 +2,12 @@ const { withResult } = require('feathers-fletching');
 const { makeParams } = require('./index');
 
 module.exports.withResultsPrimary = withResult({
-  user: (post, context) => {
-    return context.app
+  user: async (post, context) => {
+    const user = await context.app
       .service('api/users')
       .get(post.user_id, makeParams(context));
+    delete user.password;
+    return user;
   },
   comments: (post, context) => {
     return context.app
@@ -15,10 +17,12 @@ module.exports.withResultsPrimary = withResult({
 });
 
 module.exports.withResultsLoad = withResult({
-  user: (post, context) => {
-    return context.params
+  user: async (post, context) => {
+    const user = await context.params
       .loader('api/users')
       .load({ _id: post.user_id }, makeParams(context));
+    delete user.password;
+    return user;
   },
   category: (post, context) => {
     return context.params
@@ -28,10 +32,12 @@ module.exports.withResultsLoad = withResult({
 });
 
 module.exports.withResultsCached = withResult({
-  user: (post, context) => {
-    return context.params
+  user: async (post, context) => {
+    const user = await context.params
       .loader('api/users')
       .get(post.user_id, makeParams(context));
+    delete user.password;
+    return user;
   },
   category: (post, context) => {
     return context.params

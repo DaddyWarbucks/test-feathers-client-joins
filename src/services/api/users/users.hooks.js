@@ -1,12 +1,13 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const { switchHook } = require('shared');
+const { hashPassword } = require('@feathersjs/authentication-local').hooks;
 
 module.exports = {
   before: {
     all: [authenticate('jwt')],
     find: [],
     get: [],
-    create: [],
+    create: [hashPassword('password')],
     update: [],
     patch: [],
     remove: []
