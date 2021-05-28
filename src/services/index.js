@@ -5,8 +5,6 @@ const apiBatch = require('./api/batch/batch.service.js');
 const serverProfile = require('./server/profile/profile.service.js');
 const apiBios = require('./api/bios/bios.service.js');
 
-const users = require('./users/users.service.js');
-
 // eslint-disable-next-line no-unused-vars
 module.exports = function (app) {
   app.configure(apiPosts);
@@ -15,5 +13,4 @@ module.exports = function (app) {
   app.configure(apiBatch);
   app.configure(serverProfile);
   app.configure(apiBios);
-  app.configure(users);
 };
