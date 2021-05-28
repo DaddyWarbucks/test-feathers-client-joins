@@ -1,4 +1,4 @@
-export default app => {
+export default (app) => {
   class Profile {
     constructor(options, app) {
       this.options = options || {};
@@ -19,15 +19,14 @@ export default app => {
       }
       return {};
     }
+  }
 
-  };
-
-  app.use('client/profile', new Profile())
+  app.use('client/profile', new Profile());
 
   app.service('client/profile').hooks({
     after: {
       all: [
-        context => {
+        (context) => {
           delete context._log;
           delete context.result['client/profile'];
           delete context.result['server/profile'];
@@ -38,4 +37,4 @@ export default app => {
   });
 
   return app;
-}
+};

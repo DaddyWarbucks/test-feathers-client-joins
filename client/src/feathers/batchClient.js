@@ -1,3 +1,8 @@
+// Note this file is directly copy pasted from the
+// feathers-batch source code so that it can add
+// the code on lines 75-77. It is otherwise
+// unchanged.
+
 const { convert } = require('@feathersjs/errors');
 
 class BatchManager {
@@ -12,9 +17,7 @@ class BatchManager {
     this.batches.push(batch);
 
     if (this.timeout === null) {
-      this.timeout = setTimeout(() =>
-        this.flush()
-        , this.options.timeout || 50);
+      this.timeout = setTimeout(() => this.flush(), this.options.timeout || 50);
     }
   }
 
@@ -41,7 +44,7 @@ class BatchManager {
   }
 }
 
-const makeArguments = context => {
+const makeArguments = (context) => {
   const { query = {} } = context.params;
 
   switch (context.method) {
@@ -58,14 +61,14 @@ const makeArguments = context => {
   }
 };
 
-const batchClient = options => app => {
+const batchClient = (options) => (app) => {
   if (typeof options.batchService !== 'string') {
     throw new Error('`batchService` name option must be passed to batchClient');
   }
 
   const excludes = (options.exclude || []).concat(options.batchService);
   const manager = new BatchManager(app, options);
-  const collectBatches = async context => {
+  const collectBatches = async (context) => {
     const { method, path } = context;
 
     if (!app.get('useBatch')) {
@@ -78,11 +81,13 @@ const batchClient = options => app => {
 
     const args = makeArguments(context);
     const payload = [method, path, ...args];
-    const batchPromise = new Promise((resolve, reject) => manager.addBatchCall({
-      resolve,
-      reject,
-      payload
-    }));
+    const batchPromise = new Promise((resolve, reject) =>
+      manager.addBatchCall({
+        resolve,
+        reject,
+        payload
+      })
+    );
 
     context.result = await batchPromise;
 

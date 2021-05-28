@@ -5,18 +5,13 @@ import appHooks from './app.hooks';
 // import { batchClient } from 'feathers-batch/client';
 import { batchClient } from './batchClient';
 
-
 import posts from './posts';
 import profile from './profile';
 import categories from './categories';
 import users from './users';
 
 process.hrtime = require('browser-process-hrtime');
-const {
-  profiler,
-  getProfile,
-  clearProfile
-} = require('feathers-profiler');
+const { profiler, getProfile, clearProfile } = require('feathers-profiler');
 
 const app = feathers();
 
@@ -24,7 +19,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const provider = urlParams.get('provider') || 'socket';
 
 if (provider === 'rest') {
-  app.configure(feathers.rest('http://localhost:3030').fetch(fetch))
+  app.configure(feathers.rest('http://localhost:3030').fetch(fetch));
 } else {
   app.configure(feathers.socketio(io('http://localhost:3030')));
 }
@@ -50,7 +45,7 @@ app.mixins.push(function (service) {
       paginate: false,
       ...params
     };
-    return new BatchLoader(async keys => {
+    return new BatchLoader(async (keys) => {
       const result = await service.find({
         ...serviceParams,
         query: {
@@ -61,7 +56,7 @@ app.mixins.push(function (service) {
       return BatchLoader.getResultsByKey(
         keys,
         result.data ? result.data : result,
-        rec => rec[options.id],
+        (rec) => rec[options.id],
         options.multi ? '[!]' : '!'
       );
     });
@@ -72,7 +67,6 @@ app.configure(posts);
 app.configure(profile);
 app.configure(categories);
 app.configure(users);
-
 
 // Setup profiler
 app.configure(
@@ -90,10 +84,12 @@ app.set('profiler', {
 app.hooks(appHooks);
 
 // Setup feathers-batch
-app.configure(batchClient({
-  batchService: 'api/batch',
-  exclude: ['server/profile', 'client/profile', 'authentication']
-}));
+app.configure(
+  batchClient({
+    batchService: 'api/batch',
+    exclude: ['server/profile', 'client/profile', 'authentication']
+  })
+);
 
 app.setup(app);
 

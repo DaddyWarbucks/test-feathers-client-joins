@@ -1,6 +1,6 @@
 import { switchHook } from './hooks';
 
-export default app => {
+export default (app) => {
   app.service('api/users').hooks({
     before: {
       all: []
@@ -9,4 +9,4 @@ export default app => {
       all: [switchHook('users', 'client')]
     }
   });
-}
+};

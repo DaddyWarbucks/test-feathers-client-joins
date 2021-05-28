@@ -1,4 +1,4 @@
-const { ContextLoader } = require("@feathers-plus/batch-loader");
+const { ContextLoader } = require('@feathers-plus/batch-loader');
 
 module.exports.paramsFromClient = (context) => {
   if (context.params.provider) {
@@ -8,7 +8,7 @@ module.exports.paramsFromClient = (context) => {
       ...context.params,
       query: rest,
       joinLocation,
-      method,
+      method
     };
   }
 
@@ -22,7 +22,7 @@ module.exports.paramsForServer = (context) => {
   context.params.query = {
     ...context.params.query,
     method,
-    joinLocation,
+    joinLocation
   };
   // console.log('paramsForServer: ', { method, joinLocation });
   return context;
@@ -53,15 +53,15 @@ module.exports.switchHook = (service, location) => (context) => {
   const {
     withResultsPrimary,
     withResultsCached,
-    withResultsLoad,
+    withResultsLoad
   } = require(`./${service}`);
 
   switch (method) {
-    case "primary":
+    case 'primary':
       return withResultsPrimary(context);
-    case "cached":
+    case 'cached':
       return withResultsCached(context);
-    case "load":
+    case 'load':
       return withResultsLoad(context);
 
     default:

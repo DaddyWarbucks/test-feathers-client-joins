@@ -22,7 +22,11 @@ export default {
   },
 
   error: {
-    all: [context => { console.error(context.error); }],
+    all: [
+      (context) => {
+        console.error(context.error);
+      }
+    ],
     find: [],
     get: [],
     create: [],
