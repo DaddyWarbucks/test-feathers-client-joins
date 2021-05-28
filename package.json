@@ -27,12 +27,10 @@
     "test": "yarn run lint && yarn run mocha",
     "dev": "nodemon src/",
     "seed": "rm -rf data && node src/seed.js",
-    "build": "cd client && yarn build",
-    "start": "yarn build && node src/",
+    "start": "node src/",
     "mocha": "mocha test/ --recursive --exit",
     "lint": "eslint src/. test/. --config .eslintrc.json",
-    "fixcode": "eslint src/. test/. --config .eslintrc.json --fix",
-    "postinstall": "yarn install --prefix ./client"
+    "fixcode": "eslint src/. test/. --config .eslintrc.json --fix"
   },
   "standard": {
     "env": [

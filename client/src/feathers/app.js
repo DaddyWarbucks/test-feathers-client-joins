@@ -18,11 +18,13 @@ const app = feathers();
 const urlParams = new URLSearchParams(window.location.search);
 const provider = urlParams.get('provider') || 'socket';
 
+const API_PATH = process.env.ENV === 'production' ? '/' : 'http://localhost:3030'
+
 if (provider === 'rest') {
-  app.configure(feathers.rest('http://localhost:3030').fetch(fetch));
+  app.configure(feathers.rest(API_PATH).fetch(fetch));
 } else {
   app.configure(
-    feathers.socketio(io('http://localhost:3030'), { timeout: 100000 })
+    feathers.socketio(io(API_PATH), { timeout: 100000 })
   );
 }
 
