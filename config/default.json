@@ -9,7 +9,7 @@
   "nedb": "../data",
   "authentication": {
     "entity": "user",
-    "service": "users",
+    "service": "api/users",
     "secret": "rwWj1ZsOJ450uQjyBDgsVSVFjjE=",
     "authStrategies": [
       "jwt",
