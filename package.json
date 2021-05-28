@@ -31,7 +31,8 @@
     "start": "yarn build && node src/",
     "mocha": "mocha test/ --recursive --exit",
     "lint": "eslint src/. test/. --config .eslintrc.json",
-    "fixcode": "eslint src/. test/. --config .eslintrc.json --fix"
+    "fixcode": "eslint src/. test/. --config .eslintrc.json --fix",
+    "postinstall": "yarn install --prefix ./client"
   },
   "standard": {
     "env": [
