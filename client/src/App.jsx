@@ -167,14 +167,20 @@ class App extends React.Component {
                 </button>
               </div>
               <p>
-                Choose between doing the joins on the client or the server. See also{' '}
+                Choose between doing the joins on the client or the server. See
+                also{' '}
                 <a
                   href="https://github.com/feathersjs-ecosystem/feathers-batch"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   feathers-batch
-                </a>. Note that when using feathers-batch, you will see lots of client side calls, but its imporant to understand that these calls are not actual HTTP calls. The service was called, but it did not make a socket/rest request. It simply created "intructions" for feathers-batch.
+                </a>
+                . Note that when using feathers-batch, you will see lots of
+                client side calls, but its imporant to understand that these
+                calls are not actual HTTP calls. The service was called, but it
+                did not make a socket/rest request. It simply created
+                "intructions" for feathers-batch.
               </p>
             </div>
 
@@ -205,7 +211,9 @@ class App extends React.Component {
                 </button>
                 <button
                   disabled={loading}
-                  className={`btn btn-primary ${method === 'load' ? 'active' : ''}`}
+                  className={`btn btn-primary ${
+                    method === 'load' ? 'active' : ''
+                  }`}
                   onClick={() => {
                     this.setState({ method: 'load' }, this.loadPosts);
                   }}
@@ -219,54 +227,107 @@ class App extends React.Component {
                 </li>
                 <li className="mb-2">
                   Cached Get/Find - Use feathers-dataloader cached .get() and
-                  .find() methods. These are similar to basic Feathers get/find methods, but the request is cached and reused if another request with same id/params is made.
+                  .find() methods. These are similar to basic Feathers get/find
+                  methods, but the request is cached and reused if another
+                  request with same id/params is made.
                 </li>
                 <li>
-                  Load/LoadMany - Use feathers-dataloader .load() and .loadMany()
-                  methods
+                  Load/LoadMany - Use feathers-dataloader .load() and
+                  .loadMany() methods
                 </li>
               </ul>
             </div>
 
             <div className="mb-4">
               <h4>Limit</h4>
-              <input type="text" className="form-control" value={limit} onChange={event => {
-                const limit = event.target.value;
-                this.setState({
-                  limit
-                }, () => {
-                  if (limit) {
-                    this.loadPosts()
-                  }
-                })
-              }}/>
+              <input
+                type="text"
+                className="form-control"
+                value={limit}
+                onChange={(event) => {
+                  const limit = event.target.value;
+                  this.setState(
+                    {
+                      limit
+                    },
+                    () => {
+                      if (limit) {
+                        this.loadPosts();
+                      }
+                    }
+                  );
+                }}
+              />
             </div>
           </div>
           <div className="col col-sm-6">
             <div className="bg-light rounded p-3">
               <p>
-                This is a basic example app that compares doing joins/population on the client vs on the server. It is also a test bed and exmaple of a new v2 for <a href="https://github.com/feathersjs-ecosystem/batch-loader/tree/v2" target="_blank" rel="noopener noreferrer">feathers-dataloader</a>. See also the <a href="https://github.com/feathersjs-ecosystem/batch-loader/issues/18" target="_blank" rel="noopener noreferrer">v2 RFC</a> and leave some feedback! You can also checkout the <a href="https://github.com/DaddyWarbucks/test-feathers-client-joins" target="_blank" rel="noopener noreferrer">source code</a> for this project. Specifically, see the <code>shared</code> direcotry.
+                This is a basic example app that compares doing joins/population
+                on the client vs on the server. It is also a test bed and
+                exmaple of a new v2 for{' '}
+                <a
+                  href="https://github.com/feathersjs-ecosystem/batch-loader/tree/v2"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  feathers-dataloader
+                </a>
+                . See also the{' '}
+                <a
+                  href="https://github.com/feathersjs-ecosystem/batch-loader/issues/18"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  v2 RFC
+                </a>{' '}
+                and leave some feedback! You can also checkout the{' '}
+                <a
+                  href="https://github.com/DaddyWarbucks/test-feathers-client-joins"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  source code
+                </a>{' '}
+                for this project. Specifically, see the <code>shared</code>{' '}
+                direcotry.
               </p>
               <p>
-                The app consists of 5,000 <code>posts</code>. The posts then join a <code>user</code> and <code>comments</code>. Each user then joins on a <code>bio</code>, and each comment subsequently joins on its <code>user</code> (and subsequently its bio).
+                The app consists of 5,000 <code>posts</code>. The posts then
+                join a <code>user</code> and <code>comments</code>. Each user
+                then joins on a <code>bio</code>, and each comment subsequently
+                joins on its <code>user</code> (and subsequently its bio).
               </p>
               <ul>
-                <li className="mb-2">5,000 posts, each with random <code>user_id</code></li>
-                <li className="mb-2">10,000 comments, each with random <code>user_id</code> and <code>post_id</code></li>
-                <li className="mb-2">100 users, each with corresponding <code>bio_id</code></li>
+                <li className="mb-2">
+                  5,000 posts, each with random <code>user_id</code>
+                </li>
+                <li className="mb-2">
+                  10,000 comments, each with random <code>user_id</code> and{' '}
+                  <code>post_id</code>
+                </li>
+                <li className="mb-2">
+                  100 users, each with corresponding <code>bio_id</code>
+                </li>
                 <li className="mb-2">100 bios</li>
               </ul>
               <p>
-                These relationships represent a good example of nested joins where some of those joins are "repeating" resources, such as the post joining its author and comments joinging their user. This is an excellent usecase for <code>feathers-datalader</code>.
+                These relationships represent a good example of nested joins
+                where some of those joins are "repeating" resources, such as the
+                post joining its author and comments joinging their user. This
+                is an excellent usecase for <code>feathers-datalader</code>.
               </p>
               <p>
-                The app also uses <a
+                The app also uses{' '}
+                <a
                   href="https://github.com/feathersjs-ecosystem/feathers-batch"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   feathers-batch
-                </a>, which is a clever way of allowing the client to specify which joins to do, but actually executes that code on the server.
+                </a>
+                , which is a clever way of allowing the client to specify which
+                joins to do, but actually executes that code on the server.
               </p>
             </div>
           </div>
