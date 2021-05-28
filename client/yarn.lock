@@ -1110,14 +1110,7 @@
   resolved "https://registry.yarnpkg.com/@feathersjs/commons/-/commons-4.5.3.tgz#72ea846c80b74e3251448486b7800e7550cb0fa1"
   integrity sha512-LsiZ0jxh13TT6SOrDq5VYtdBCv0Vdvu4a5Wei/Dvd/daZHX6ERuH6iQtfh2f5hFwuydtd+Ch/2GlYld8XziwhA==
 
-"@feathersjs/errors@^4.3.4":
-  version "4.5.3"
-  resolved "https://registry.yarnpkg.com/@feathersjs/errors/-/errors-4.5.3.tgz#7476de0a9586f7290b1cbe5ff481ef293660a25b"
-  integrity sha512-yvy5k0X79yQBxNSmjxU8rxRrKD/YnMjqAWzT/LbJ41UIOsvRzo88pqFuNXTX8qbB90IPjtxgbSjuaxoiQZ7nmg==
-  dependencies:
-    debug "^4.1.1"
-
-"@feathersjs/errors@^4.5.11":
+"@feathersjs/errors@^4.3.4", "@feathersjs/errors@^4.5.11":
   version "4.5.11"
   resolved "https://registry.yarnpkg.com/@feathersjs/errors/-/errors-4.5.11.tgz#419b4dd9b557fe7a87978363175cbd5e06f8b3b9"
   integrity sha512-KzkUqmaV7/SGK6SM/ILXjMI/EHOGKQE4GgDHCsB4+mcIwb8IZboeHL6IkYjh6MvwjKNDyS728McZvcflDGn/fA==
@@ -2736,6 +2729,14 @@ cache-base@^1.0.1:
     union-value "^1.0.0"
     unset-value "^1.0.0"
 
+call-bind@^1.0.0:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/call-bind/-/call-bind-1.0.2.tgz#b1d4e89e688119c3c9a903ad30abb2f6a919be3c"
+  integrity sha512-7O+FbCihrB5WGbFYesctwmTKae6rOiIzmz1icreWJ+0aA7LJfuqhEso2T9ncpcFtzMQtzXf2QGGueWJGTYsqrA==
+  dependencies:
+    function-bind "^1.1.1"
+    get-intrinsic "^1.0.2"
+
 call-me-maybe@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/call-me-maybe/-/call-me-maybe-1.0.1.tgz#26d208ea89e37b5cbde60250a15f031c16a4d66b"
@@ -3599,14 +3600,14 @@ debug@^3.0.0, debug@^3.1.1, debug@^3.2.5:
   dependencies:
     ms "^2.1.1"
 
-debug@^4.0.1, debug@^4.1.0, debug@^4.1.1, debug@~4.1.0:
+debug@^4.0.1, debug@^4.1.0, debug@~4.1.0:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
   integrity sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==
   dependencies:
     ms "^2.1.1"
 
-debug@^4.3.1:
+debug@^4.1.1, debug@^4.3.1:
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.1.tgz#f0d229c505e0c6d8c49ac553d1b13dc183f6b2ee"
   integrity sha512-doEwdvm4PCeK4K3RQN2ZC2BYUBaxwLARCqZmMjtF8a51J2Rb0xpVloFRnCODwqjpwnAoao4pelN8l3RJdv3gRQ==
@@ -4562,10 +4563,10 @@ feathers-batch@^1.1.0:
   dependencies:
     "@feathersjs/errors" "^4.5.11"
 
-feathers-fletching@^1.11.1:
-  version "1.11.1"
-  resolved "https://registry.yarnpkg.com/feathers-fletching/-/feathers-fletching-1.11.1.tgz#9583b839403b531d3b272a962e232303705e68e6"
-  integrity sha512-48JRd9xHyq9/bikXzKH5a9VFO0ZmlIEZzl4rR0uYfx28O/y0KeVG/HBiZk2fkZDaOcPNN55kWzGX6CykLnlzoQ==
+feathers-fletching@^1.12.2:
+  version "1.12.2"
+  resolved "https://registry.yarnpkg.com/feathers-fletching/-/feathers-fletching-1.12.2.tgz#ab402731112109a78af09aa815f5de2c3ff68d27"
+  integrity sha512-Hm5RzVHPF0q3MdkvcIgI69tF8tRKceag3NikMkb2lyxqob1bFJ/50HSxGc+VPZ1j7yUkiMF3I7snrEVI3jIzXA==
   dependencies:
     "@feathersjs/errors" "^4.3.4"
     lru-cache "^5.1.1"
@@ -4893,6 +4894,15 @@ get-caller-file@^2.0.1:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-2.0.5.tgz#4f94412a82db32f36e3b0b9741f8a97feb031f7e"
   integrity sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==
+
+get-intrinsic@^1.0.2:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/get-intrinsic/-/get-intrinsic-1.1.1.tgz#15f59f376f855c446963948f0d24cd3637b4abc6"
+  integrity sha512-kWZrnVM42QCiEA2Ig1bG8zjoIMOgxWwYCEeNdwY6Tv/cOSeGpcoX4pXHfKUxNKVoArnrEr2e9srnAxxGIraS9Q==
+  dependencies:
+    function-bind "^1.1.1"
+    has "^1.0.3"
+    has-symbols "^1.0.1"
 
 get-own-enumerable-property-symbols@^3.0.0:
   version "3.0.2"
@@ -7028,10 +7038,15 @@ ms@2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
   integrity sha512-tgp+dl5cGk28utYktBsrFqA7HKgrhgPsg6Z/EfhWI4gl1Hwq8B/GmY/0oXZ6nF8hDVesS/FpnYaD/kOWhYQvyg==
 
-ms@2.1.2, ms@^2.1.1:
+ms@2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
+
+ms@^2.1.1:
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
+  integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
 multicast-dns-service-types@^1.1.0:
   version "1.1.0"
@@ -7272,6 +7287,11 @@ object-inspect@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/object-inspect/-/object-inspect-1.7.0.tgz#f4f6bd181ad77f006b5ece60bd0b6f398ff74a67"
   integrity sha512-a7pEHdh1xKIAgTySUGgLMx/xwDZskN1Ud6egYYN3EdRW4ZMPNEDUTF+hwy2LUC+Bl+SyLXANnwz/jyh/qutKUw==
+
+object-inspect@^1.9.0:
+  version "1.10.3"
+  resolved "https://registry.yarnpkg.com/object-inspect/-/object-inspect-1.10.3.tgz#c2aa7d2d09f50c99375704f7a0adf24c5782d369"
+  integrity sha512-e5mCJlSH7poANfC8z8S9s9S2IN5/4Zb3aZ33f5s8YqoazCFzNLloLU8r5VCG+G7WoqLvAAZoVMcy3tp/3X0Plw==
 
 object-is@^1.0.1:
   version "1.0.2"
@@ -8679,9 +8699,11 @@ qs@6.7.0:
   integrity sha512-VCdBRNFTX1fyE7Nb6FYoURo/SPe62QCaAyzJvUjwRaIsc+NePBEniHlvxFmmX56+HZphIGtV0XeCirBtpDrTyQ==
 
 qs@^6.9.1:
-  version "6.9.4"
-  resolved "https://registry.yarnpkg.com/qs/-/qs-6.9.4.tgz#9090b290d1f91728d3c22e54843ca44aea5ab687"
-  integrity sha512-A1kFqHekCTM7cz0udomYUoYNWjBebHm/5wzU/XqrBRBNWectVH0QIiN+NEcZ0Dte5hvzHwbr8+XQmguPhJ6WdQ==
+  version "6.10.1"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.10.1.tgz#4931482fa8d647a5aab799c5271d2133b981fb6a"
+  integrity sha512-M528Hph6wsSVOBiYUnGf+K/7w0hNshs/duGsNXPUCLH5XAqjEtiPGwNONLV0tBH8NoGb0mvD5JubnUTrujKDTg==
+  dependencies:
+    side-channel "^1.0.4"
 
 qs@~6.5.2:
   version "6.5.2"
@@ -9516,8 +9538,11 @@ shallow-clone@^3.0.0:
   dependencies:
     kind-of "^6.0.2"
 
-"shared@file:./../shared":
+"shared@file:../shared":
   version "1.0.0"
+  dependencies:
+    "@feathers-plus/batch-loader" "https://github.com/feathersjs-ecosystem/batch-loader.git#v2"
+    feathers-fletching "^1.12.2"
 
 shebang-command@^1.2.0:
   version "1.2.0"
@@ -9560,6 +9585,15 @@ side-channel@^1.0.2:
   dependencies:
     es-abstract "^1.17.0-next.1"
     object-inspect "^1.7.0"
+
+side-channel@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/side-channel/-/side-channel-1.0.4.tgz#efce5c8fdc104ee751b25c58d4290011fa5ea2cf"
+  integrity sha512-q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw==
+  dependencies:
+    call-bind "^1.0.0"
+    get-intrinsic "^1.0.2"
+    object-inspect "^1.9.0"
 
 signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"

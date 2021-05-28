@@ -2,5 +2,9 @@
   "name": "shared",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@feathers-plus/batch-loader": "https://github.com/feathersjs-ecosystem/batch-loader.git#v2",
+    "feathers-fletching": "^1.12.2"
+  }
 }

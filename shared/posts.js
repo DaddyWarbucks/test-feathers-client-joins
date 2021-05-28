@@ -24,7 +24,7 @@ module.exports.withResultsLoad = withResult({
     delete user.password;
     return user;
   },
-  category: (post, context) => {
+  comments: (post, context) => {
     return context.params
       .loader('api/comments')
       .loadMany({ post_id: post._id }, makeParams(context));
@@ -39,7 +39,7 @@ module.exports.withResultsCached = withResult({
     delete user.password;
     return user;
   },
-  category: (post, context) => {
+  comments: (post, context) => {
     return context.params
       .loader('api/comments')
       .find({ query: { post_id: post._id } }, makeParams(context));

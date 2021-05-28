@@ -40,7 +40,6 @@
     "ignore": []
   },
   "dependencies": {
-    "@feathers-plus/batch-loader": "https://github.com/feathersjs-ecosystem/batch-loader.git#v2",
     "@feathersjs/authentication": "^4.5.1",
     "@feathersjs/authentication-local": "^4.5.1",
     "@feathersjs/authentication-oauth": "^4.5.1",
