@@ -1,4 +1,4 @@
-import { setupLoader, paramsForServer } from './hooks';
+import { setupLoader, paramsForServer } from 'shared';
 
 export default {
   before: {

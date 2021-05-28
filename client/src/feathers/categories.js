@@ -1,4 +1,4 @@
-import { switchHook } from './hooks';
+import { switchHook } from 'shared';
 
 export default (app) => {
   app.service('api/categories').hooks({

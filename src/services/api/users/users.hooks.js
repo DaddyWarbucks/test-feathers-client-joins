@@ -1,5 +1,5 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
-const { switchHook } = require('../../../../client/src/feathers/hooks');
+const { switchHook } = require('shared');
 
 module.exports = {
   before: {

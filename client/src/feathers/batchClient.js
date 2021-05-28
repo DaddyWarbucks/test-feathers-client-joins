@@ -1,11 +1,13 @@
 // Note this file is directly copy pasted from the
 // feathers-batch source code so that it can add
-// the code on lines 75-77. It is otherwise
-// unchanged.
+// the code on lines 75-77. It is also updated
+// to use ESM modules instead of CommonJS so
+// CRA does not bark...
+// It is otherwise unchanged.
 
 const { convert } = require('@feathersjs/errors');
 
-class BatchManager {
+export class BatchManager {
   constructor(app, options) {
     this.app = app;
     this.batches = [];
@@ -44,7 +46,7 @@ class BatchManager {
   }
 }
 
-const makeArguments = (context) => {
+export const makeArguments = (context) => {
   const { query = {} } = context.params;
 
   switch (context.method) {
@@ -61,7 +63,7 @@ const makeArguments = (context) => {
   }
 };
 
-const batchClient = (options) => (app) => {
+export const batchClient = (options) => (app) => {
   if (typeof options.batchService !== 'string') {
     throw new Error('`batchService` name option must be passed to batchClient');
   }
@@ -98,7 +100,3 @@ const batchClient = (options) => (app) => {
     before: collectBatches
   });
 };
-
-exports.BatchManager = BatchManager;
-exports.makeArguments = makeArguments;
-exports.batchClient = batchClient;

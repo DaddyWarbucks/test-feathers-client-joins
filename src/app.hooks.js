@@ -1,7 +1,4 @@
-const {
-  paramsFromClient,
-  setupLoader
-} = require('../client/src/feathers/hooks');
+const { paramsFromClient, setupLoader } = require('shared');
 
 module.exports = {
   before: {
