@@ -8,7 +8,6 @@ const {
 const withResults = withResult({
   bio: async (user, context) => {
     return context.app.service('api/bios')
-      .repeatAuth(context)
       .get(user.bio_id);
   }
 });
@@ -20,32 +19,31 @@ const withResultsBatchLoader = withResult({
 }, context => {
   return {
     bios: context.app.service('api/bios')
-      .repeatAuth(context)
       .loaderFactory()
   };
 });
 
 const switchHook = context => {
-  switch(context.app.get('hookName')) {
-  case 'withResultsServer':
-    return withResults(context);
-  case 'withResultsBatchLoaderServer':
-    return withResultsBatchLoader(context);
+  switch (context.params.hookName) {
+    case 'withResultsServer':
+      return withResults(context);
+    case 'withResultsBatchLoaderServer':
+      return withResultsBatchLoader(context);
 
-  default:
-    return context;
+    default:
+      return context;
   }
 };
 
 module.exports = {
   before: {
     all: [],
-    find: [ authenticate('jwt') ],
-    get: [ authenticate('jwt') ],
-    create: [ hashPassword('password') ],
-    update: [ hashPassword('password'),  authenticate('jwt') ],
-    patch: [ hashPassword('password'),  authenticate('jwt') ],
-    remove: [ authenticate('jwt') ]
+    find: [authenticate('jwt')],
+    get: [authenticate('jwt')],
+    create: [hashPassword('password')],
+    update: [hashPassword('password'), authenticate('jwt')],
+    patch: [hashPassword('password'), authenticate('jwt')],
+    remove: [authenticate('jwt')]
   },
 
   after: {

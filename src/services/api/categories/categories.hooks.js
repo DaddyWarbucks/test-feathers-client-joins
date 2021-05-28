@@ -4,8 +4,7 @@ const { withResult } = require('feathers-fletching');
 const withResults = withResult({
   tag: async (category, context) => {
     return context.app.service('api/tags')
-      .repeatAuth(context)
-      .get(category.tag_id, );
+      .get(category.tag_id);
   }
 });
 
@@ -16,20 +15,19 @@ const withResultsBatchLoader = withResult({
 }, context => {
   return {
     tags: context.app.service('api/tags')
-      .repeatAuth(context)
       .loaderFactory()
   };
 });
 
 const switchHook = context => {
-  switch(context.app.get('hookName')) {
-  case 'withResultsServer':
-    return withResults(context);
-  case 'withResultsBatchLoaderServer':
-    return withResultsBatchLoader(context);
+  switch (context.params.hookName) {
+    case 'withResultsServer':
+      return withResults(context);
+    case 'withResultsBatchLoaderServer':
+      return withResultsBatchLoader(context);
 
-  default:
-    return context;
+    default:
+      return context;
   }
 };
 

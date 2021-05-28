@@ -1,6 +1,8 @@
 import io from 'socket.io-client';
 import feathers from '@feathersjs/client';
 import BatchLoader from '@feathers-plus/batch-loader';
+import { batchClient } from 'feathers-batch/client';
+
 
 import posts from './posts';
 import profile from './profile';
@@ -12,7 +14,7 @@ const {
   profiler,
   getProfile,
   clearProfile
-}  = require('feathers-profiler');
+} = require('feathers-profiler');
 
 const app = feathers();
 
@@ -29,8 +31,8 @@ app.configure(feathers.authentication());
 
 // Add a nice mixin to services that allow you to easily
 // create batchLoaders w/o all the config
-app.mixins.push(function(service) {
-  service.loaderFactory = function(opts = {}) {
+app.mixins.push(function (service) {
+  service.loaderFactory = function (opts = {}) {
     if (!service.find) {
       throw new Error(
         `Cannot call the loaderFactory() method on this service because it does not have a find() method.`
@@ -77,10 +79,16 @@ app.configure(
     stats: 'total'
   })
 );
+
 app.set('profiler', {
   getProfile,
   clearProfile
 });
+
+// Setup feathers-batch
+// app.configure(batchClient({
+//   batchService: 'api/batch'
+// }));
 
 app.setup(app);
 

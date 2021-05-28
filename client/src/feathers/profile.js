@@ -1,6 +1,6 @@
 export default app => {
   class Profile {
-    constructor (options, app) {
+    constructor(options, app) {
       this.options = options || {};
     }
 
@@ -9,15 +9,11 @@ export default app => {
       this.profiler = app.get('profiler');
     }
 
-    async find (params) {
+    async find(params) {
       return this.profiler.getProfile();
     }
 
-    async create (data, params) {
-      const { hookName, repeatAuth } = data;
-      this.app.set('hookName', hookName);
-      this.app.set('repeatAuth', repeatAuth);
-
+    async create(data, params) {
       if (this.profiler.getProfile()) {
         this.profiler.clearProfile();
       }

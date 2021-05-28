@@ -9,11 +9,14 @@ class App extends React.Component {
 
     this.state = {
       loading: true,
+      error: null,
       serverProfile: null,
+      clientProfile: null,
       posts: null,
       duration: null,
-      hookName: 'withResults',
-      repeatAuth: false,
+      useBatch: false,
+      method: 'primary',
+      joinLocation: 'client',
       provider
     }
   }
@@ -25,51 +28,66 @@ class App extends React.Component {
       password: 'password'
     });
 
-    this.loadPosts('withResults');
+    this.loadPosts();
   }
 
-  loadPosts = async hookName => {
+  loadPosts = async () => {
     this.setState({ loading: true });
-    const { repeatAuth } = this.state;
+    try {
 
-    await app.service('server/profile').create({ hookName, repeatAuth });
-    await app.service('client/profile').create({ hookName, repeatAuth });
+      await app.service('server/profile').create({});
+      await app.service('client/profile').create({});
 
-    const start = new Date().getTime();
-    const posts = await app.service('api/posts').find({
-      query: { $sort: { _id: 1 }, $limit: 100 }
-    });
-    const end = new Date().getTime();
+      const start = new Date().getTime();
+      const posts = await app.service('api/posts').find({
+        query: {
+          $sort: { _id: 1 }, $limit: 100,
+          method: this.state.method,
+          joinLocation: this.state.joinLocation
+        },
+      });
+      const end = new Date().getTime();
 
-    const serverProfile = await app.service('server/profile').find();
-    const clientProfile = await app.service('client/profile').find();
+      const serverProfile = await app.service('server/profile').find();
+      const clientProfile = await app.service('client/profile').find();
 
-    this.setState({
-      posts,
-      duration: end - start,
-      hookName,
-      serverProfile,
-      clientProfile,
-      loading: false
-    });
+      this.setState({
+        posts,
+        duration: end - start,
+        serverProfile,
+        clientProfile,
+        loading: false,
+        error: null
+      });
+
+    } catch (error) {
+      this.setState({
+        error,
+        loading: false
+      })
+    }
+
+
   }
 
-  toggleRepeatAuth = repeatAuth => {
-    this.setState({ repeatAuth }, () => {
-      this.loadPosts(this.state.hookName);
-    });
-  }
+  // toggleRepeatAuth = repeatAuth => {
+  //   this.setState({ repeatAuth }, () => {
+  //     this.loadPosts(this.state.hookName);
+  //   });
+  // }
 
   render() {
     const {
-      posts,
-      duration,
-      hookName,
-      repeatAuth,
-      provider,
+      loading,
+      error,
       serverProfile,
       clientProfile,
-      loading
+      posts,
+      duration,
+      useBatch,
+      method,
+      joinLocation,
+      provider
     } = this.state;
 
     return (
@@ -95,78 +113,100 @@ class App extends React.Component {
         </div>
 
         <div className="mb-4">
-          <h4>Client Hooks</h4>
+          <h4>Join Location</h4>
           <div className="btn-group mb-2">
             <button
               disabled={loading}
-              className={`btn btn-primary ${hookName === 'withResults' ? 'active' : ''}`}
-              onClick={() => this.loadPosts('withResults')}
+              className={`btn btn-primary ${joinLocation === 'client' ? 'active' : ''}`}
+              onClick={() => {
+                this.setState(
+                  { joinLocation: 'client' },
+                  this.loadPosts
+                );
+              }}
             >
-              withResults
+              Client
             </button>
             <button
               disabled={loading}
-              className={`btn btn-primary ${hookName === 'withResultsBatchLoader' ? 'active' : ''}`}
-              onClick={() => this.loadPosts('withResultsBatchLoader')}
+              className={`btn btn-primary ${joinLocation === 'server' ? 'active' : ''}`}
+              onClick={() => {
+                this.setState(
+                  { joinLocation: 'server' },
+                  this.loadPosts
+                );
+              }}
             >
-              withResultsBatchLoader
+              Server
             </button>
             <button
               disabled={loading}
-              className={`btn btn-primary ${hookName === 'withResultsGroupLoader' ? 'active' : ''}`}
-              onClick={() => this.loadPosts('withResultsGroupLoader')}
+              className={`btn btn-primary ${joinLocation === 'batch' ? 'active' : ''}`}
+              onClick={() => {
+                this.setState(
+                  { joinLocation: 'batch' },
+                  this.loadPosts
+                );
+              }}
             >
-              withResultsGroupLoader
+              Server via feathers-batch
             </button>
           </div>
-          <p className="lead">"withResults" and "withResultsBatchLoader" do all joins via hooks on the client. "withResultsGroupLoader" also does all joins via hooks on the client, but attempts to save HTTP requests by "grouping" services together and running them
-          on the server.</p>
+          <p className="lead">Choose between doing the joins on the client or the server. See also <a href="https://github.com/feathersjs-ecosystem/feathers-batch" target="_blank" rel="noopener noreferrer">feathers-batch</a></p>
         </div>
 
         <div className="mb-4">
-          <h4>Server Hooks</h4>
+          <h4>Methods</h4>
           <div className="btn-group mb-2">
             <button
               disabled={loading}
-              className={`btn btn-info ${hookName === 'withResultsServer' ? 'active' : ''}`}
-              onClick={() => this.loadPosts('withResultsServer')}
+              className={`btn btn-primary ${method === 'primary' ? 'active' : ''}`}
+              onClick={() => {
+                this.setState(
+                  { method: 'primary' },
+                  this.loadPosts
+                );
+              }}
             >
-              withResults
+              Get/Find
             </button>
             <button
               disabled={loading}
-              className={`btn btn-info ${hookName === 'withResultsBatchLoaderServer' ? 'active' : ''}`}
-              onClick={() => this.loadPosts('withResultsBatchLoaderServer')}
+              className={`btn btn-primary ${method === 'cached' ? 'active' : ''}`}
+              onClick={() => {
+                this.setState(
+                  { method: 'cached' },
+                  this.loadPosts
+                );
+              }}
             >
-              withResultsBatchLoader
+              Cached Get/Find
+            </button>
+            <button
+              disabled={loading}
+              className={`btn btn-primary ${method === 'load' ? 'active' : ''}`}
+              onClick={() => {
+                this.setState(
+                  { method: 'load' },
+                  this.loadPosts
+                );
+              }}
+            >
+              Load/LoadMany
             </button>
           </div>
-          <p className="lead">Do all joins on the server.</p>
+          <ul>
+            <li className="lead">Get/Find - Use standard Feathers .get() and .find() methods</li>
+            <li className="lead">Cached Get/Find - Use feathers-dataloader cached .get() and .find() methods</li>
+            <li className="lead">Load/LoadMany - Use feathers-dataloader .load() and .loadMany() methods</li>
+          </ul>
         </div>
 
-        <div className="mb-4">
-          <h4>Repeat Server Auth</h4>
-          <p className="text-secondary">* Note this only affects the "Server Hooks" and "withResultsGroupLoader".</p>
-          <div className="btn-group mb-2">
-            <button
-              disabled={loading}
-              className={`btn btn-warning ${repeatAuth  ? 'active' : ''}`}
-              onClick={() => this.toggleRepeatAuth(true)}
-            >
-              Enabled
-            </button>
-            <button
-              disabled={loading}
-              className={`btn btn-warning ${repeatAuth ? '' : 'active'}`}
-              onClick={() => this.toggleRepeatAuth(false)}
-            >
-              Disabled
-            </button>
+        {error && (
+          <div className="alert alert-danger">
+            {error.message}
           </div>
-          <p className="lead">
-            When enabled, all nested calls to services to join records will have to go through the "authenticate('jwt')" hook. When disabled, the authentication from the initial call to "api/posts" will be passed to each nested join service.
-          </p>
-        </div>
+        )}
 
         <div className="mb-4 p-3 bg-light">
           <h3>Duration: {loading ? (
@@ -189,10 +229,10 @@ class App extends React.Component {
         </div>
         <div>
           <div className="mb-4">
-          <h4>Results</h4>
-          {posts && (
-            <pre className="p-3 bg-light">{JSON.stringify(posts, null, 2)}</pre>
-          )}
+            <h4>Results</h4>
+            {posts && (
+              <pre className="p-3 bg-light">{JSON.stringify(posts, null, 2)}</pre>
+            )}
           </div>
         </div>
       </div>

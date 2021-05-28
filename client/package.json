@@ -9,6 +9,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "browser-process-hrtime": "^1.0.0",
+    "feathers-batch": "^1.1.0",
     "feathers-fletching": "^1.11.1",
     "feathers-profiler": "^0.1.5",
     "react": "^16.13.1",

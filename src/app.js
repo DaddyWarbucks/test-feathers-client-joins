@@ -8,11 +8,11 @@ const configuration = require('@feathersjs/configuration');
 const express = require('@feathersjs/express');
 const socketio = require('@feathersjs/socketio');
 const { strictRestQuery } = require('feathers-fletching');
-const  {
+const {
   profiler,
   getProfile,
   clearProfile
-}  = require('feathers-profiler');
+} = require('feathers-profiler');
 const BatchLoader = require('@feathers-plus/batch-loader');
 
 const middleware = require('./middleware');
@@ -45,109 +45,10 @@ app.use('/', express.static(app.get('public')));
 app.configure(express.rest());
 app.configure(socketio());
 
-// Add a mixin that allows you to call a service as if it
-// were being called externally
-// app.mixins.push(function(service) {
-//   service.asExternal = function(context) {
-//     const _params = {
-//       provider: context.params.provider,
-//       headers: context.params.headers,
-//       authentication: context.params.authentication,
-//       authenticated: null,
-//       user: null
-//     };
-//     return {
-//       find(params) {
-//         return service.find({ ...params, ..._params });
-//       },
-//       get(id, params) {
-//         return service.find(id, { ...params, ..._params });
-//       },
-//       loaderFactory({ params, ...rest } = {}) {
-//         return service.loaderFactory({
-//           ...rest,
-//           params: { ...params, ..._params }
-//         });
-//       }
-//     };
-//   };
-// });
-
-// Add a mixin that allows you to call a service as
-// internal but also pass the auth
-// app.mixins.push(function(service) {
-//   service.asAuthenticated = function(context) {
-//     const _params = {
-//       headers: context.params.headers,
-//       authentication: context.params.authentication,
-//       authenticated: true,
-//       user: context.params.user
-//     };
-//     return {
-//       find(params) {
-//         return service.find({ ...params, ..._params });
-//       },
-//       get(id, params) {
-//         return service.find(id, { ...params, ..._params });
-//       },
-//       loaderFactory({ params, ...rest } = {}) {
-//         return service.loaderFactory({
-//           ...rest,
-//           params: { ...params, ..._params }
-//         });
-//       }
-//     };
-//   };
-// });
-
-// Add a mixin that configs the service call to be able
-// to switch between calling joins with or without auth
-app.mixins.push(function(service) {
-
-  service.repeatAuth = function(context) {
-    const repeatAuth = context.app.get('repeatAuth');
-
-    const makeParams = params => {
-      if (repeatAuth) {
-        return {
-          ...params,
-          provider: context.params.provider,
-          headers: context.params.headers,
-          authentication: context.params && context.params.authentication,
-          authenticated: false,
-          user: null
-        };
-      }
-
-      return {
-        ...params,
-        headers: context.params.headers,
-        authentication: context.params && context.params.authentication,
-        authenticated: true,
-        user: context.params.user
-      };
-
-    };
-
-
-    return {
-      find(params) {
-        return service.find(makeParams(params));
-      },
-      get(id, params) {
-        return service.get(id, makeParams(params));
-      },
-      loaderFactory({ params, ...rest } = {}) {
-        return service.loaderFactory({ params: makeParams(params), ...rest });
-      }
-    };
-  };
-});
-
 // Add a nice mixin to services that allow you to easily
 // create batchLoaders w/o all the config
-app.mixins.push(function(service) {
-  service.loaderFactory = function(opts = {}) {
+app.mixins.push(function (service) {
+  service.loaderFactory = function (opts = {}) {
     if (!service.find) {
       throw new Error(
         'Cannot call the loaderFactory() method on this service because it does not have a find() method.'

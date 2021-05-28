@@ -6,7 +6,7 @@ module.exports = {
     all: [authenticate('jwt')],
     find: [],
     get: [],
-    create: [],
+    create: [context => { console.log(context.data); }],
     update: [],
     patch: [],
     remove: []

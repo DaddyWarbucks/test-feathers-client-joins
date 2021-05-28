@@ -4,14 +4,12 @@ const { withResult } = require('feathers-fletching');
 const withResults = withResult({
   user: async (post, context) => {
     const user = await context.app.service('api/users')
-      .repeatAuth(context)
       .get(post.user_id);
     delete user.password;
     return user;
   },
   category: (post, context) => {
     return context.app.service('api/categories')
-      .repeatAuth(context)
       .get(post.category_id);
   }
 });
@@ -28,23 +26,21 @@ const withResultsBatchLoader = withResult({
 }, context => {
   return {
     users: context.app.service('api/users')
-      .repeatAuth(context)
       .loaderFactory(),
     categories: context.app.service('api/categories')
-      .repeatAuth(context)
       .loaderFactory()
   };
 });
 
 const switchHook = context => {
-  switch(context.app.get('hookName')) {
-  case 'withResultsServer':
-    return withResults(context);
-  case 'withResultsBatchLoaderServer':
-    return withResultsBatchLoader(context);
+  switch (context.params.hookName) {
+    case 'withResultsServer':
+      return withResults(context);
+    case 'withResultsBatchLoaderServer':
+      return withResultsBatchLoader(context);
 
-  default:
-    return context;
+    default:
+      return context;
   }
 };
 
