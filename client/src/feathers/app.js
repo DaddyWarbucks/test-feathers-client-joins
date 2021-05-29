@@ -21,9 +21,9 @@ const API_PATH =
 // Share state across both the restApp and
 // the socketApp
 let appState = {
-  limit: 1,
+  limit: 10,
   useBatch: false,
-  maxBatchSize: null,
+  maxBatchSize: 20,
   method: 'primary',
   joinLocation: 'client',
   provider: 'rest',

@@ -84,6 +84,8 @@ function App(props) {
       });
   });
 
+  const enforceClientMax = useBatch && joinLocation === 'client';
+
   return (
     <div className="container-fluid mt-4">
       <p className="lead">
@@ -192,15 +194,12 @@ function App(props) {
             </li>
             <li>
               When using REST, the browser enforces a character limit on URL
-              length. Because dataloader creates long URL's containing a list of
-              ID's, the app will crash unexpectedly when using the "DataLoader"
-              method option and REST around 80-90 results. Unfortunately, there
-              is a bug in feathers-client v4 that makes this difficult to catch,
-              but this has been fixed in the upcoming v5. If the app
-              freezes...reload the page. Set the "BatchSize" to set dataloader
-              "maxBatchSize" option which limits the number of keys in the URL
-              by maxing out and then starting a new batch. But, you probaly want
-              to unset it when using server side joins.
+              length. Dataloader creates long URL's containing a list of ID's.
+              Set the "maxBatchSize" to set dataloader option which limits the
+              number of keys in the URL by maxing out and then starting a new
+              batch. For this app, that limit is about 20 because of the long
+              length of the UUID's. But, you probaly want to unset it when using
+              server or socket side joins.
             </li>
           </ul>
         </div>
@@ -229,7 +228,13 @@ function App(props) {
                 provider === 'rest' ? 'active' : ''
               }`}
               onClick={() => {
-                setAndLoad({ provider: 'rest' });
+                if (enforceClientMax) {
+                  return setAndLoad({
+                    provider: 'rest',
+                    maxBatchSize: Math.min(maxBatchSize, 20)
+                  });
+                }
+                return setAndLoad({ provider: 'rest' });
               }}
             >
               REST
@@ -246,34 +251,40 @@ function App(props) {
               <button
                 disabled={loading}
                 className={`btn btn-info ${
-                  joinLocation === 'client' ? 'active' : ''
+                  !useBatch && joinLocation === 'client' ? 'active' : ''
                 }`}
                 onClick={() => {
-                  setAndLoad({ joinLocation: 'client' });
+                  if (enforceClientMax) {
+                    return setAndLoad({
+                      joinLocation: 'client',
+                      maxBatchSize: Math.min(maxBatchSize, 20)
+                    });
+                  }
+                  return setAndLoad({ joinLocation: 'client' });
                 }}
               >
                 Client
               </button>
               <button
                 disabled={loading}
-                className={`btn btn-info ${
-                  joinLocation === 'server' ? 'active' : ''
-                }`}
+                className={`btn btn-info ${useBatch ? 'active' : ''}`}
                 onClick={() => {
-                  setAndLoad({ joinLocation: 'server' });
+                  setAndLoad({ useBatch: !useBatch });
                 }}
               >
-                Server
+                BatchClient
               </button>
             </div>
             <button
               disabled={loading}
-              className={`btn btn-info ${useBatch ? 'active' : ''}`}
+              className={`btn btn-info ${
+                joinLocation === 'server' ? 'active' : ''
+              }`}
               onClick={() => {
-                setAndLoad({ useBatch: !useBatch });
+                setAndLoad({ joinLocation: 'server' });
               }}
             >
-              feathers-batch
+              Server
             </button>
           </div>
           <p>
@@ -312,7 +323,7 @@ function App(props) {
                 setAndLoad({ method: 'cached' });
               }}
             >
-              Cached Service
+              CachedService
             </button>
             <button
               disabled={loading}
@@ -323,48 +334,57 @@ function App(props) {
             >
               DataLoader
             </button>
+            {method === 'load' && (
+              <div
+                className="d-inline position-relative"
+                style={{ maxWidth: 130 }}
+              >
+                <div style={{ right: 10, top: 6, position: 'absolute' }}>
+                  <span style={{ fontSize: '0.7rem' }}>maxBatchSize</span>
+                </div>
+                <input
+                  disabled={loading}
+                  type="number"
+                  max={enforceClientMax ? 20 : undefined}
+                  className="form-control"
+                  value={method === 'load' ? maxBatchSize : undefined}
+                  onChange={(event) => {
+                    const maxBatchSize = event.target.value;
+                    setAndLoad({ maxBatchSize });
+                  }}
+                />
+              </div>
+            )}
           </div>
           <p>
-            User feathers get/find methods. Or use the <br /> dataloader's
-            cached get/find or load/loadMany methods.
+            User feathers get/find methods. Or checkout <br />
+            <a
+              href="https://github.com/feathersjs-ecosystem/batch-loader/issues/18"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              v2 RFC
+            </a>{' '}
+            for more info. See docs for "maxBatchSize".
           </p>
         </div>
         <div className="col-sm-auto">
-          <h4>Limit & BatchSize</h4>
-          <div className="row">
-            <div className="col-6 pr-1" style={{ maxWidth: 150 }}>
-              <input
-                disabled={loading}
-                type="number"
-                placeholder="limit"
-                max={10000}
-                className="form-control mb-2"
-                value={limit}
-                onChange={(event) => {
-                  const limit = event.target.value;
-                  setAndLoad({ limit });
-                }}
-              />
-            </div>
-            <div className="col-6 pl-1" style={{ maxWidth: 150 }}>
-              <input
-                disabled={loading || method !== 'load'}
-                placeholder="Batch Size"
-                type="number"
-                // max={25}
-                className="form-control mb-2"
-                value={method === 'load' ? maxBatchSize : undefined}
-                onChange={(event) => {
-                  const maxBatchSize = event.target.value;
-                  setAndLoad({ maxBatchSize });
-                }}
-              />
-            </div>
+          <h4>Limit</h4>
+          <div style={{ maxWidth: 120 }}>
+            <input
+              disabled={loading}
+              type="number"
+              placeholder="limit"
+              max={10000}
+              className="form-control mb-2"
+              value={limit}
+              onChange={(event) => {
+                const limit = event.target.value;
+                setAndLoad({ limit });
+              }}
+            />
           </div>
-          <p>
-            Set a limit all the way up to 10,000. <br /> See docs for info about
-            batch size.
-          </p>
+          <p>Set a up to 10,000.</p>
         </div>
       </div>
 
