@@ -33,12 +33,15 @@ app.configure(configuration());
 app.use(helmet());
 app.use(
   cors({
-    origin: (origin) => {
-      return (
+    origin: (origin, callback) => {
+      if (
         !origin ||
         origin === 'http://localhost:3000' ||
         origin === 'https://test-feathers-client-joins.herokuapp.com'
-      );
+      ) {
+        return callback(null, true);
+      }
+      return callback(new Error('Blocked by CORS'));
     }
   })
 );
