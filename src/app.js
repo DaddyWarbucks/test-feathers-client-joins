@@ -21,9 +21,9 @@ const app = express(feathers());
 
 app.configure(
   strictRestQuery({
-    arrayLimit: 5000,
-    depth: 5000,
-    parameterLimit: 5000
+    arrayLimit: 10000,
+    depth: 10000,
+    parameterLimit: 100000
   })
 );
 
@@ -31,20 +31,21 @@ app.configure(
 app.configure(configuration());
 // Enable security, CORS, compression, favicon and body parsing
 app.use(helmet());
-// app.use(
-//   cors({
-//     origin: (origin, callback) => {
-//       if (
-//         !origin ||
-//         origin === 'http://localhost:3000' ||
-//         origin === 'https://test-feathers-client-joins.herokuapp.com'
-//       ) {
-//         return callback(null, true);
-//       }
-//       return callback(new Error('Blocked by CORS'));
-//     }
-//   })
-// );
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      return callback(null, true);
+      // if (
+      //   !origin ||
+      //   origin === 'http://localhost:3000' ||
+      //   origin === 'https://test-feathers-client-joins.herokuapp.com'
+      // ) {
+      //   return callback(null, true);
+      // }
+      // return callback(new Error('Blocked by CORS'));
+    }
+  })
+);
 app.use(compress());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
