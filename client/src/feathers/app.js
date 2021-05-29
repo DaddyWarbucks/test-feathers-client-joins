@@ -19,7 +19,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const provider = urlParams.get('provider') || 'socket';
 
 const API_PATH =
-  process.env.NODE_ENV === 'development' ? 'http://localhost:3030' : '/';
+  process.env.NODE_ENV === 'development' ? 'http://localhost:3030' : window.location.origin;
 
 if (provider === 'rest') {
   app.configure(feathers.rest(API_PATH).fetch(fetch));
