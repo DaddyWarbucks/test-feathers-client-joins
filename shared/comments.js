@@ -16,7 +16,7 @@ module.exports.withResultsLoad = withResult({
     const { maxBatchSize } = makeParams(context);
     const user = await context.params
       .loader('api/users', { maxBatchSize })
-      .load({ _id: comment.user_id }, makeParams(context));
+      .load({ _id: comment.user_id }, null, makeParams(context));
     delete user.password;
     return user;
   }
@@ -26,7 +26,7 @@ module.exports.withResultsCached = withResult({
   user: async (comment, context) => {
     const user = await context.params
       .loader('api/users')
-      .get(comment.user_id, makeParams(context));
+      .get(comment.user_id, null, makeParams(context));
     delete user.password;
     return user;
   }

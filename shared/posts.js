@@ -12,7 +12,7 @@ module.exports.withResultsPrimary = withResult({
   comments: (post, context) => {
     return context.app
       .service('api/comments')
-      .find({ query: { post_id: post._id } }, makeParams(context));
+      .find({ query: { post_id: post._id }, ...makeParams(context) });
   }
 });
 
@@ -21,7 +21,7 @@ module.exports.withResultsLoad = withResult({
     const { maxBatchSize } = makeParams(context);
     const user = await context.params
       .loader('api/users', { maxBatchSize })
-      .load({ _id: post.user_id }, makeParams(context));
+      .load({ _id: post.user_id }, null, makeParams(context));
     delete user.password;
     return user;
   },
@@ -29,7 +29,7 @@ module.exports.withResultsLoad = withResult({
     const { maxBatchSize } = makeParams(context);
     return context.params
       .loader('api/comments', { maxBatchSize })
-      .loadMany({ post_id: post._id }, makeParams(context));
+      .loadMany({ post_id: post._id }, null, makeParams(context));
   }
 });
 
@@ -37,13 +37,13 @@ module.exports.withResultsCached = withResult({
   user: async (post, context) => {
     const user = await context.params
       .loader('api/users')
-      .get(post.user_id, makeParams(context));
+      .get(post.user_id, null, makeParams(context));
     delete user.password;
     return user;
   },
   comments: (post, context) => {
     return context.params
       .loader('api/comments')
-      .find({ query: { post_id: post._id } }, makeParams(context));
+      .find({ query: { post_id: post._id } }, null, makeParams(context));
   }
 });

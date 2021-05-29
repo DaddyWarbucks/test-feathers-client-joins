@@ -4,7 +4,8 @@ module.exports.makeParams = (context) => {
   return {
     method: context.params.method,
     joinLocation: context.params.joinLocation,
-    maxBatchSize: context.params.maxBatchSize
+    maxBatchSize: context.params.maxBatchSize,
+    loader: context.params.loader
   };
 };
 
