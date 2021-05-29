@@ -38,6 +38,7 @@ app.use(
       if (
         !origin ||
         origin === 'http://localhost:3000' ||
+        origin === 'https://test-feathers-client-joins.herokuapp.com' ||
         origin === 'https://test-feathers-client-joins.herokuapp.com/'
       ) {
         return callback(null, true);
