@@ -1,11 +1,14 @@
 import React from 'react';
 import app from './feathers/app';
+import { debounce } from 'lodash';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     const urlParams = new URLSearchParams(window.location.search);
     const provider = urlParams.get('provider') || 'socket';
+
+    this.debouncedLoadPosts = debounce(this.loadPosts, 500, { leading: false });
 
     this.state = {
       docsOpen: false,
@@ -16,7 +19,8 @@ class App extends React.Component {
       posts: null,
       duration: null,
       useBatch: false,
-      limit: 100,
+      limit: 50,
+      maxBatchSize: provider === 'socket' ? undefined : 25,
       method: 'primary',
       joinLocation: 'client',
       provider
@@ -43,10 +47,11 @@ class App extends React.Component {
       const posts = await app.service('api/posts').find({
         query: {
           $sort: { _id: 1 },
-          $limit: this.state.limit
+          $limit: this.state.limit || 1
         },
         method: this.state.method,
-        joinLocation: this.state.joinLocation
+        joinLocation: this.state.joinLocation,
+        maxBatchSize: this.state.maxBatchSize
       });
       const end = new Date().getTime();
 
@@ -80,6 +85,7 @@ class App extends React.Component {
       duration,
       useBatch,
       limit,
+      maxBatchSize,
       method,
       joinLocation,
       provider
@@ -222,6 +228,9 @@ class App extends React.Component {
                 about all thos .get() requests...). The potential resources and
                 performance benefits are quite large.
               </li>
+              <li>
+                When using REST, the browser enforces a character limit on URL length. Because dataloader creates long URL's containing a list of ID's, the app will crash unexpectedly when using the "DataLoader" method option and REST around 80-90 results. Unfortunately, there is a bug in feathers-client v4 that makes this difficult to catch, but this has been fixed in the upcoming v5. If the app freezes...reload the page. Set the "BatchSize" to set dataloader "maxBatchSize" option which limits the number of keys in the URL by maxing out and then starting a new batch. But, you probaly want to unset it when using server side joins.
+              </li>
             </ul>
           </div>
         </div>
@@ -362,8 +371,12 @@ class App extends React.Component {
             </p>
           </div>
           <div className="col-sm-auto">
-            <h4>Limit</h4>
+            <h4>Limit & BatchSize</h4>
+            <div className="row">
+              <div className="col-6 pr-1" style={{ maxWidth: 100 }}>
+
             <input
+              disabled={loading}
               type="text"
               className="form-control mb-2"
               value={limit}
@@ -375,13 +388,37 @@ class App extends React.Component {
                   },
                   () => {
                     if (limit) {
-                      this.loadPosts();
+                      this.debouncedLoadPosts();
                     }
                   }
                 );
               }}
             />
-            <p>Set a limit all the way up to 10,000</p>
+              </div>
+              <div className="col-6 pl-1" style={{ maxWidth: 100 }}>
+
+            <input
+              disabled={loading}
+              type="text"
+              className="form-control mb-2"
+              value={maxBatchSize}
+              onChange={(event) => {
+                const maxBatchSize = event.target.value;
+                this.setState(
+                  {
+                    maxBatchSize
+                  },
+                  () => {
+                    if (limit) {
+                      this.debouncedLoadPosts();
+                    }
+                  }
+                );
+              }}
+            />
+              </div>
+            </div>
+            <p>Set a limit all the way up to 10,000. <br/> See docs for info about batch size.</p>
           </div>
         </div>
 

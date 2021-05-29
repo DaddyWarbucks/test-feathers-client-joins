@@ -11,8 +11,9 @@ module.exports.withResultsPrimary = withResult({
 
 module.exports.withResultsLoad = withResult({
   bio: (user, context) => {
+    const { maxBatchSize } = makeParams(context);
     return context.params
-      .loader('api/bios')
+      .loader('api/bios', { maxBatchSize })
       .load({ _id: user.bio_id }, makeParams(context));
   }
 });

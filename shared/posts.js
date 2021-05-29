@@ -18,15 +18,17 @@ module.exports.withResultsPrimary = withResult({
 
 module.exports.withResultsLoad = withResult({
   user: async (post, context) => {
+    const { maxBatchSize } = makeParams(context);
     const user = await context.params
-      .loader('api/users')
+      .loader('api/users', { maxBatchSize })
       .load({ _id: post.user_id }, makeParams(context));
     delete user.password;
     return user;
   },
   comments: (post, context) => {
+    const { maxBatchSize } = makeParams(context);
     return context.params
-      .loader('api/comments')
+      .loader('api/comments', { maxBatchSize })
       .loadMany({ post_id: post._id }, makeParams(context));
   }
 });

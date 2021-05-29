@@ -2,21 +2,23 @@ const { ContextLoader } = require('@feathers-plus/batch-loader');
 
 module.exports.makeParams = (context) => {
   return {
-    paginate: false,
     method: context.params.method,
-    joinLocation: context.params.joinLocation
+    joinLocation: context.params.joinLocation,
+    maxBatchSize: context.params.maxBatchSize
   };
 };
 
 module.exports.paramsFromClient = (context) => {
   if (context.params.provider) {
-    const { method, joinLocation, ...rest } = context.params.query || {};
+    const { method, joinLocation, maxBatchSize, ...rest } =
+      context.params.query || {};
 
     context.params = {
       ...context.params,
       query: rest,
+      method,
       joinLocation,
-      method
+      maxBatchSize
     };
   }
 
@@ -26,11 +28,12 @@ module.exports.paramsFromClient = (context) => {
 };
 
 module.exports.paramsForServer = (context) => {
-  const { method, joinLocation } = context.params;
+  const { method, joinLocation, maxBatchSize } = context.params;
   context.params.query = {
     ...context.params.query,
     method,
-    joinLocation
+    joinLocation,
+    maxBatchSize
   };
   // console.log('paramsForServer: ', { method, joinLocation });
   return context;

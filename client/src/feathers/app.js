@@ -90,6 +90,7 @@ app.hooks(appHooks);
 app.configure(
   batchClient({
     batchService: 'api/batch',
+    timeout: 3,
     exclude: ['server/profile', 'client/profile', 'authentication']
   })
 );
