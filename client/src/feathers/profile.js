@@ -27,9 +27,19 @@ export default (app) => {
     after: {
       all: [
         (context) => {
+          const { useBatch } = app.getState();
+
           delete context._log;
           delete context.result['client/profile'];
           delete context.result['server/profile'];
+          delete context.result['authentication'];
+
+          if (useBatch) {
+            delete context.result['api/users'];
+            delete context.result['api/comments'];
+            delete context.result['api/bios'];
+          }
+
           return context;
         }
       ]

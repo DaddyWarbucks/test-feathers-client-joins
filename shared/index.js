@@ -51,12 +51,11 @@ module.exports.setupLoader = (context) => {
 module.exports.switchHook = (service, location) => (context) => {
   const { joinLocation, method } = context.params;
 
+  // console.log('switchHook: ', `${joinLocation} | ${context.path} | ${method}`);
+
   if (!joinLocation || !method) {
-    // console.log('No joinLocation or method');
     return context;
   }
-
-  // console.log(`Using the ${method} method on the ${joinLocation}`);
 
   if (joinLocation !== location) {
     return context;

@@ -1,100 +1,114 @@
 import io from 'socket.io-client';
 import feathers from '@feathersjs/client';
-import BatchLoader from '@feathers-plus/batch-loader';
 import appHooks from './app.hooks';
-// import { batchClient } from 'feathers-batch/client';
 import { batchClient } from './batchClient';
+import { useState, useCallback } from 'react';
 
 import posts from './posts';
 import profile from './profile';
 import comments from './comments';
 import users from './users';
 
+// Required to run feathers-profilers in the browser
 process.hrtime = require('browser-process-hrtime');
 const { profiler, getProfile, clearProfile } = require('feathers-profiler');
 
-const app = feathers();
-
-const urlParams = new URLSearchParams(window.location.search);
-const provider = urlParams.get('provider') || 'socket';
-
 const API_PATH =
-  process.env.NODE_ENV === 'development' ? 'http://localhost:3030' : window.location.origin;
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3030'
+    : window.location.origin;
 
-if (provider === 'rest') {
-  app.configure(feathers.rest(API_PATH).fetch(fetch));
-} else {
-  app.configure(feathers.socketio(io(API_PATH), { timeout: 100000 }));
-}
+// Share state across both the restApp and
+// the socketApp
+let appState = {
+  limit: 1,
+  useBatch: false,
+  maxBatchSize: null,
+  method: 'primary',
+  joinLocation: 'client',
+  provider: 'rest',
+  docsOpen: false,
+  loading: true,
+  error: null,
+  serverProfile: null,
+  clientProfile: null,
+  posts: null,
+  duration: null
+};
 
-app.configure(feathers.authentication());
+const setState = (newState) => {
+  appState = { ...appState, ...newState };
+};
 
-// Add a nice mixin to services that allow you to easily
-// create batchLoaders w/o all the config
-app.mixins.push(function (service) {
-  service.loaderFactory = function (opts = {}) {
-    if (!service.find) {
-      throw new Error(
-        `Cannot call the loaderFactory() method on this service because it does not have a find() method.`
-      );
-    }
-    const { params = {}, ...rest } = opts;
-    const options = {
-      id: '_id',
-      multi: false,
-      ...rest
-    };
-    const serviceParams = {
-      paginate: false,
-      ...params
-    };
-    return new BatchLoader(async (keys) => {
-      const result = await service.find({
-        ...serviceParams,
-        query: {
-          [options.id]: { $in: BatchLoader.getUniqueKeys(keys) },
-          ...serviceParams.query
-        }
-      });
-      return BatchLoader.getResultsByKey(
-        keys,
-        result.data ? result.data : result,
-        (rec) => rec[options.id],
-        options.multi ? '[!]' : '!'
-      );
-    });
-  };
-});
+const getState = () => {
+  return { ...appState };
+};
 
-app.configure(posts);
-app.configure(profile);
-app.configure(comments);
-app.configure(users);
+const useAppState = () => {
+  const [, render] = useState({});
+  const set = useCallback((newState) => {
+    setState(newState);
+    render({});
+  }, []);
+  return [appState, set];
+};
 
-// Setup profiler
-app.configure(
-  profiler({
-    logger: null,
-    stats: 'total'
-  })
-);
+const setupApp = (app) => {
+  app.configure(feathers.authentication());
 
-app.set('profiler', {
-  getProfile,
-  clearProfile
-});
+  app.setState = setState;
+  app.getState = getState;
+  app.useAppState = useAppState;
 
-app.hooks(appHooks);
+  app.configure(posts);
+  app.configure(profile);
+  app.configure(comments);
+  app.configure(users);
 
-// Setup feathers-batch
-app.configure(
-  batchClient({
-    batchService: 'api/batch',
-    timeout: 3,
-    exclude: ['server/profile', 'client/profile', 'authentication']
-  })
-);
+  app.configure(
+    profiler({
+      logger: null,
+      stats: 'total'
+    })
+  );
 
-app.setup(app);
+  app.set('profiler', {
+    getProfile,
+    clearProfile
+  });
 
-export default app;
+  app.hooks(appHooks);
+
+  app.configure(
+    batchClient({
+      batchService: 'api/batch',
+      timeout: 3,
+      exclude: ['server/profile', 'client/profile', 'authentication']
+    })
+  );
+
+  app.setup(app);
+
+  return app;
+};
+
+const restApp = feathers();
+restApp.configure(feathers.rest(API_PATH).fetch(fetch));
+setupApp(restApp);
+
+const socketApp = feathers();
+socketApp.configure(feathers.socketio(io(API_PATH), { timeout: 100000 }));
+setupApp(socketApp);
+
+restApp.socketApp = socketApp;
+
+const oldService = restApp.service;
+restApp.service = function (path) {
+  const { provider } = restApp.getState();
+  if (provider === 'rest') {
+    return oldService.call(this, path);
+  }
+  return restApp.socketApp.service(path);
+};
+
+export default restApp;

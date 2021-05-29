@@ -64,6 +64,10 @@ app.configure(services);
 // Set up event channels (see channels.js)
 app.configure(channels);
 
+// Configure a middleware for 404s and the error handler
+app.use(express.notFound());
+app.use(express.errorHandler({ logger }));
+
 // Setup profiler
 app.configure(
   profiler({
@@ -75,10 +79,6 @@ app.set('profiler', {
   getProfile,
   clearProfile
 });
-
-// Configure a middleware for 404s and the error handler
-app.use(express.notFound());
-app.use(express.errorHandler({ logger }));
 
 app.hooks(appHooks);
 

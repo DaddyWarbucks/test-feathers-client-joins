@@ -1,6 +1,6 @@
 // Note this file is directly copy pasted from the
 // feathers-batch source code so that it can add
-// the code on lines 75-77. It is also updated
+// the code on lines 76-79. It is also updated
 // to use ESM modules instead of CommonJS so
 // CRA does not bark...
 // It is otherwise unchanged.
@@ -73,7 +73,8 @@ export const batchClient = (options) => (app) => {
   const collectBatches = async (context) => {
     const { method, path } = context;
 
-    if (!app.get('useBatch')) {
+    const { useBatch } = app.getState();
+    if (!useBatch) {
       return context;
     }
 

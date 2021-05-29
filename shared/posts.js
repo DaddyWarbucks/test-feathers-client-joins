@@ -44,6 +44,6 @@ module.exports.withResultsCached = withResult({
   comments: (post, context) => {
     return context.params
       .loader('api/comments')
-      .find({ query: { post_id: post._id } }, null, makeParams(context));
+      .find({ query: { post_id: post._id } }, makeParams(context));
   }
 });
