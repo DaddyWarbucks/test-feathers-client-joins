@@ -35,6 +35,7 @@ app.use(
   cors({
     origin: (origin) => {
       return (
+        !origin ||
         origin === 'http://localhost:3000' ||
         origin === 'https://test-feathers-client-joins.herokuapp.com'
       );
