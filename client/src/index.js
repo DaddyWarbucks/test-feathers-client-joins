@@ -20,7 +20,9 @@ class ErrorBoundary extends React.Component {
             <h3 className="text-danger mb-4">
               {this.state.error.message || 'Something went wrong!'}
             </h3>
-            <a href={window.location} className="btn btn-primary btn-block">Reload Page</a>
+            <a href={window.location} className="btn btn-primary btn-block">
+              Reload Page
+            </a>
           </div>
         </div>
       );
