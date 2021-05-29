@@ -75,10 +75,7 @@ function App(props) {
       password: 'password'
     };
 
-    Promise.all([
-      app.authenticate(creds),
-      app.socketApp.authenticate(creds)
-    ])
+    Promise.all([app.authenticate(creds), app.socketApp.authenticate(creds)])
       .then(() => {
         loadPosts();
       })
