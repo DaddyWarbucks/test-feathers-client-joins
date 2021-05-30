@@ -164,6 +164,16 @@ function App(props) {
           </p>
 
           <ul>
+            <li>
+              You can checkout a quick video of me rambling out this too.{' '}
+              <a
+                href="https://www.loom.com/share/89e100a63d7e42c0b562fde3f3c29ec2"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Watch the video
+              </a>
+            </li>
             <li className="mb-2">
               The app also uses{' '}
               <a
