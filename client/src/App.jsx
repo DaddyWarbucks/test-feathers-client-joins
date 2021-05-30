@@ -84,7 +84,13 @@ function App(props) {
       });
   });
 
-  const enforceClientMax = useBatch && joinLocation === 'client';
+  const enforceMaxBatchSize = method === 'load' && joinLocation === 'client';
+  const defaultMaxBatchSize = 20;
+  const setDefaultMaxBatchSize = () => {
+    return enforceMaxBatchSize
+      ? Math.min(maxBatchSize, defaultMaxBatchSize)
+      : maxBatchSize;
+  };
 
   return (
     <div className="container-fluid mt-4">
@@ -168,12 +174,12 @@ function App(props) {
                 feathers-batch
               </a>
               , which is a clever way of allowing the client to specify which
-              joins to do, but actually executes that code on the server. Note
-              that when using feathers-batch, you will see lots of client side
-              calls, but its imporant to understand that these calls are not
-              actual HTTP requests. The service was called, but it did not make
-              a socket/rest request. It simply created "intructions" for
-              feathers-batch.
+              joins to do, but actually executes that code on the server. For
+              this app, the <code>timeout</code> option has been set to 3ms.
+              This means that when a batch "starts" it waits 3ms for any other
+              calls to happen before executing them all at once. This 3ms is
+              enough time to collect all of our calls in the resolver, but it
+              does basically add an arbitrary 9ms of delay.
             </li>
             <li className="mb-2">
               The app uses authentication. This means that there are additional
@@ -189,17 +195,33 @@ function App(props) {
               request to some database server that lives on another machine. As
               impressive as the different loading techniques are, it should be
               noted that on a production database there would be a corresponding
-              number of HTTP requests (think about all thos .get() requests...).
-              The potential resources and performance benefits are quite large.
+              number of HTTP requests (think about all thos .get() requests...)
+              to another server...so basically twice as many as we see here. The
+              potential resources and performance benefits are quite large in
+              that case.
             </li>
-            <li>
+            <li className="mb-2">
               When using REST, the browser enforces a character limit on URL
               length. Dataloader creates long URL's containing a list of ID's.
-              Set the "maxBatchSize" to set dataloader option which limits the
+              Set the "maxBatchSize" to set a dataloader option which limits the
               number of keys in the URL by maxing out and then starting a new
               batch. For this app, that limit is about 20 because of the long
               length of the UUID's. But, you probaly want to unset it when using
-              server or socket side joins.
+              server or socket side joins. For the sake of not crashing the app,
+              a max limit of 20 is enforced when using client joins.
+            </li>
+            <li>
+              Its helpful to use the netowrk tab in DevTools when using this
+              app. It really drives home how many HTTP requests are being made.
+              Checkout{' '}
+              <a
+                href="https://stackoverflow.com/questions/43081107/how-do-you-inspect-websocket-traffic-with-chrome-developer-tools"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                how to inspect socket requests
+              </a>
+              .
             </li>
           </ul>
         </div>
@@ -228,13 +250,10 @@ function App(props) {
                 provider === 'rest' ? 'active' : ''
               }`}
               onClick={() => {
-                if (enforceClientMax) {
-                  return setAndLoad({
-                    provider: 'rest',
-                    maxBatchSize: Math.min(maxBatchSize, 20)
-                  });
-                }
-                return setAndLoad({ provider: 'rest' });
+                setAndLoad({
+                  provider: 'rest',
+                  maxBatchSize: setDefaultMaxBatchSize()
+                });
               }}
             >
               REST
@@ -254,13 +273,10 @@ function App(props) {
                   !useBatch && joinLocation === 'client' ? 'active' : ''
                 }`}
                 onClick={() => {
-                  if (enforceClientMax) {
-                    return setAndLoad({
-                      joinLocation: 'client',
-                      maxBatchSize: Math.min(maxBatchSize, 20)
-                    });
-                  }
-                  return setAndLoad({ joinLocation: 'client' });
+                  setAndLoad({
+                    joinLocation: 'client',
+                    maxBatchSize: setDefaultMaxBatchSize()
+                  });
                 }}
               >
                 Client
@@ -345,12 +361,18 @@ function App(props) {
                 <input
                   disabled={loading}
                   type="number"
-                  max={enforceClientMax ? 20 : undefined}
                   className="form-control"
-                  value={method === 'load' ? maxBatchSize : undefined}
                   onChange={(event) => {
-                    const maxBatchSize = event.target.value;
-                    setAndLoad({ maxBatchSize });
+                    const newMaxBatchSize = event.target.value;
+                    if (
+                      enforceMaxBatchSize &&
+                      newMaxBatchSize > defaultMaxBatchSize
+                    ) {
+                      return alert(
+                        'The default matchBaxSize when using client joins is 20. Please see the docs at the top of the page for more details.'
+                      );
+                    }
+                    setAndLoad({ maxBatchSize: newMaxBatchSize });
                   }}
                 />
               </div>
