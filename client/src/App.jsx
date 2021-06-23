@@ -32,6 +32,10 @@ function App(props) {
 
     const { limit, method, joinLocation, maxBatchSize } = app.getState();
 
+    const enforceMaxBatchSize = method === 'load'
+      && joinLocation === 'client'
+      && provider === 'rest';
+
     try {
       await app.service('server/profile').create({});
       await app.service('client/profile').create({});
@@ -44,7 +48,7 @@ function App(props) {
         },
         method,
         joinLocation,
-        maxBatchSize
+        maxBatchSize: enforceMaxBatchSize ? maxBatchSize : null
       });
       const end = new Date().getTime();
 
@@ -84,12 +88,12 @@ function App(props) {
       });
   });
 
-  const enforceMaxBatchSize = method === 'load' && joinLocation === 'client';
+  const enforceMaxBatchSize = method === 'load' && joinLocation === 'client' && provider === 'rest';
   const defaultMaxBatchSize = 20;
   const setDefaultMaxBatchSize = () => {
     return enforceMaxBatchSize
       ? Math.min(maxBatchSize, defaultMaxBatchSize)
-      : maxBatchSize;
+      : null;
   };
 
   return (
@@ -360,7 +364,7 @@ function App(props) {
             >
               DataLoader
             </button>
-            {method === 'load' && (
+            {method === 'load' && provider === 'rest' && joinLocation === 'client' && (
               <div
                 className="d-inline position-relative"
                 style={{ maxWidth: 130 }}
@@ -372,6 +376,7 @@ function App(props) {
                   disabled={loading}
                   type="number"
                   className="form-control"
+                  value={maxBatchSize}
                   onChange={(event) => {
                     const newMaxBatchSize = event.target.value;
                     if (
